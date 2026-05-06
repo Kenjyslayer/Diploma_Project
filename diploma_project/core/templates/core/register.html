@@ -1,0 +1,121 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="page-hero p-4 mb-4 text-center">
+        <i class="bi bi-person-plus display-6 text-primary"></i>
+        <h1 class="h4 mt-2 mb-1">Create an account</h1>
+        <p class="text-muted small mb-0">Join to post requests, contribute, and use the message center.</p>
+      </div>
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% if form.errors %}
+              <div class="alert alert-danger py-2 small">
+                Please fix the errors below.
+              </div>
+            {% endif %}
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+              {{ form.username }}{% if form.username.errors %}<div class="text-danger small">{{ form.username.errors }}</div>{% endif %}
+            </div>
+            <div class="row g-2">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                {{ form.first_name }}{% if form.first_name.errors %}<div class="text-danger small">{{ form.first_name.errors }}</div>{% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                {{ form.last_name }}{% if form.last_name.errors %}<div class="text-danger small">{{ form.last_name.errors }}</div>{% endif %}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+              {{ form.email }}{% if form.email.errors %}<div class="text-danger small">{{ form.email.errors }}</div>{% endif %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold" for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label }}</label>
+              {{ form.phone_number }}{% if form.phone_number.errors %}<div class="text-danger small">{{ form.phone_number.errors }}</div>{% endif %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold" for="{{ form.role.id_for_label }}">{{ form.role.label }}</label>
+              {{ form.role }}{% if form.role.errors %}<div class="text-danger small">{{ form.role.errors }}</div>{% endif %}
+            </div>
+
+            <hr class="my-3">
+            <h2 class="h6 mb-2">Preferred drop-off point</h2>
+
+            <div id="profile-dropoff-root"
+                 data-api-nova-cities="{% url 'api_public_nova_cities' %}"
+                 data-api-nova-warehouses="{% url 'api_public_nova_warehouses' %}"
+                 data-api-up="{% url 'api_public_ukrposhta_postoffices' %}"
+                 data-nova-configured="{% if nova_poshta_configured %}1{% else %}0{% endif %}">
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.preferred_dropoff_kind.id_for_label }}">{{ form.preferred_dropoff_kind.label }}</label>
+                {{ form.preferred_dropoff_kind }}
+                {% if form.preferred_dropoff_kind.errors %}<div class="text-danger small">{{ form.preferred_dropoff_kind.errors }}</div>{% endif %}
+              </div>
+
+              <div id="pref-panel-nova" style="display:none;" class="mb-3">
+                <div class="alert alert-info py-2 small" id="pref-np-api-hint" style="display:none;">
+                  Nova Poshta API key is missing. Offline demo cities are available.
+                </div>
+                <label class="form-label fw-semibold small">City</label>
+                <input type="search" class="form-control" id="pref-np-city-search" placeholder="Kyiv, Lviv…" autocomplete="off" aria-controls="pref-np-city-results">
+                <div id="pref-np-city-results" class="list-group mt-1 shadow-sm position-relative" style="max-height:220px;overflow-y:auto;display:none;z-index:5;"></div>
+                <div class="mt-2">
+                  <label class="form-label fw-semibold small">Branch / parcel locker</label>
+                  <select class="form-select" id="pref-np-wh-pick"><option value="">Select branch…</option></select>
+                </div>
+                {{ form.preferred_np_city_ref }}
+                {{ form.preferred_np_warehouse_ref }}
+                {{ form.preferred_np_label }}
+                {% if form.preferred_np_label.errors %}<div class="text-danger small">{{ form.preferred_np_label.errors }}</div>{% endif %}
+              </div>
+
+              <div id="pref-panel-ukrposhta" style="display:none;" class="mb-3">
+                <div class="row g-2 align-items-end mb-2">
+                  <div class="col-md-5">
+                    <label class="form-label fw-semibold small">Postcode</label>
+                    {{ form.preferred_up_postcode }}
+                  </div>
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-outline-primary" id="pref-btn-up-search">Find offices</button>
+                  </div>
+                </div>
+                <div id="pref-up-results" class="mb-2 small"></div>
+                {{ form.preferred_up_office_id }}
+                <label class="form-label fw-semibold small">Office line</label>
+                {{ form.preferred_up_label }}
+                {% if form.preferred_up_label.errors %}<div class="text-danger small">{{ form.preferred_up_label.errors }}</div>{% endif %}
+              </div>
+            </div>
+
+            <div class="row g-2">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold" for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                {{ form.password1 }}{% if form.password1.errors %}<div class="text-danger small">{{ form.password1.errors }}</div>{% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                {{ form.password2 }}{% if form.password2.errors %}<div class="text-danger small">{{ form.password2.errors }}</div>{% endif %}
+              </div>
+            </div>
+            <button class="btn btn-primary w-100 py-2" type="submit"><i class="bi bi-check2-circle me-2"></i>Create account</button>
+          </form>
+        </div>
+      </div>
+      <p class="text-center text-muted small mt-3">Already registered? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'core/js/delivery_profile_dropoff.js' %}"></script>
+{% endblock %}

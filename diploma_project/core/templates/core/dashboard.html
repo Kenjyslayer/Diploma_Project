@@ -1,0 +1,127 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+  <div class="page-hero p-4 mb-4">
+    <h1 class="h4 mb-1">Dashboard</h1>
+    <p class="text-muted small mb-0">Quick overview of your activity.</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+            <div>
+              <h2 class="h6 mb-0">My requests</h2>
+              <div class="text-muted small">Requests you created</div>
+            </div>
+            <a class="small text-decoration-none" href="{% url 'my_requests' %}">View all →</a>
+          </div>
+          {% if my_requests %}
+            <ul class="list-group list-group-flush">
+              {% for r in my_requests %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div class="me-3">
+                    <a href="{% url 'request_detail' r.id %}">{{ r.title }}</a>
+                    {% if r.awaiting_review %}
+                      <div class="small mt-1">
+                        <span class="badge text-bg-warning">Awaiting review: {{ r.awaiting_review }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <span class="badge {{ r.status_badge_class }} flex-shrink-0">{{ r.get_status_display }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="alert alert-info border-0 mb-0">You haven’t created any requests yet.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+            <div>
+              <h2 class="h6 mb-0">My offers</h2>
+              <div class="text-muted small">Proposals and send windows</div>
+            </div>
+            <a class="small text-decoration-none" href="{% url 'my_offers' %}">View all →</a>
+          </div>
+          {% if my_contributions %}
+            <ul class="list-group list-group-flush">
+              {% for c in my_contributions %}
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div><strong>{{ c.request.title }}</strong> — {{ c.quantity }}</div>
+                      <div class="text-muted small">
+                        Status: <span class="badge {{ c.status_badge_class }}">{{ c.get_status_display }}</span>
+                        {% if c.expires_at %}• Send by {{ c.expires_at|date:"M j, Y H:i" }} UTC{% endif %}
+                        {% if c.status == 'pending' %}• Code: {{ c.verification_code }}{% endif %}
+                      </div>
+                    </div>
+                    <div class="d-flex gap-2 flex-shrink-0 flex-wrap">
+                      {% if c.chat_conversation %}
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'conversation_detail' c.chat_conversation.id %}">Chat</a>
+                      {% endif %}
+                      {% if c.status == 'revision_requested' %}
+                        <a class="btn btn-sm btn-primary" href="{% url 'revise_contribution' c.id %}">Fix & resubmit</a>
+                      {% endif %}
+                      {% if c.status == 'proposed' or c.status == 'revision_requested' %}
+                        <form method="post" action="{% url 'withdraw_contribution' c.id %}" style="display:inline;">
+                          {% csrf_token %}
+                          <button class="btn btn-sm btn-outline-danger" type="submit">Withdraw</button>
+                        </form>
+                      {% endif %}
+                      {% if c.status == 'pending' %}
+                        <a class="btn btn-sm btn-outline-dark" href="{% url 'shipping_handoff_slip' c.id %}">Shipping slip + QR</a>
+                        <a class="btn btn-sm btn-outline-primary" href="{% url 'upload_proof' c.id %}">Upload proof</a>
+                        <a class="btn btn-sm btn-outline-danger" href="{% url 'open_dispute' c.id %}">Dispute</a>
+                      {% endif %}
+                    </div>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="alert alert-info border-0 mb-0">No offers yet.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+          <div>
+            <h2 class="h6 mb-0">My disputes</h2>
+            <div class="text-muted small">Issues you opened during send windows</div>
+          </div>
+        </div>
+        {% if my_disputes %}
+          <ul class="list-group list-group-flush">
+            {% for d in my_disputes %}
+              <li class="list-group-item">
+                <div><strong>#{{ d.id }}</strong> for <strong>{{ d.contribution.request.title }}</strong> (code: {{ d.contribution.verification_code }})</div>
+                <div class="text-muted small">Status: {{ d.get_status_display }} • Created: {{ d.created_at }}</div>
+                <div class="mt-2">{{ d.reason }}</div>
+                {% if d.admin_note %}
+                  <div class="mt-2"><strong>Admin note:</strong> {{ d.admin_note }}</div>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="alert alert-info border-0 mb-0">No disputes opened.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

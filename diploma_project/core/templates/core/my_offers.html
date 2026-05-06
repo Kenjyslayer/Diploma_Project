@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My offers{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+    <div>
+      <h2 class="mb-1">My offers</h2>
+      <p class="text-muted small mb-0">Your contribution proposals and send windows.</p>
+    </div>
+    <a class="btn btn-outline-secondary" href="{% url 'request_list' %}">Browse requests</a>
+  </div>
+
+  <form method="get" class="card border-0 shadow-sm mb-3">
+    <div class="card-body p-3">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-5">
+          <label class="form-label small fw-semibold">Status</label>
+          <select class="form-select" name="status">
+            <option value="" {% if not status %}selected{% endif %}>All</option>
+            <option value="proposed" {% if status == "proposed" %}selected{% endif %}>Awaiting owner</option>
+            <option value="revision_requested" {% if status == "revision_requested" %}selected{% endif %}>Changes requested</option>
+            <option value="pending" {% if status == "pending" %}selected{% endif %}>Accepted — send window</option>
+            <option value="withdrawn" {% if status == "withdrawn" %}selected{% endif %}>Withdrawn</option>
+            <option value="declined" {% if status == "declined" %}selected{% endif %}>Declined</option>
+            <option value="verified" {% if status == "verified" %}selected{% endif %}>Verified</option>
+            <option value="expired" {% if status == "expired" %}selected{% endif %}>Expired</option>
+          </select>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+          <button class="btn btn-outline-primary" type="submit">Apply</button>
+          <a class="btn btn-outline-secondary" href="{% url 'my_offers' %}">Reset</a>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  {% if offers %}
+    <div class="card border-0 shadow-sm">
+      <div class="list-group list-group-flush">
+        {% for c in offers %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+              <div class="me-auto">
+                <div class="fw-semibold">
+                  <a href="{% url 'request_detail' c.request.id %}">{{ c.request.title }}</a>
+                  <span class="badge {{ c.status_badge_class }} ms-1">{{ c.get_status_display }}</span>
+                </div>
+                <div class="text-muted small">
+                  Qty {{ c.quantity }} · created {{ c.created_at|date:"M j, Y H:i" }}
+                  {% if c.expires_at %}· send by <strong>{{ c.expires_at|date:"M j, Y H:i" }} UTC</strong>{% endif %}
+                  {% if c.status == "pending" %}· code <span class="font-monospace fw-semibold">{{ c.verification_code }}</span>{% endif %}
+                </div>
+                {% if c.owner_note and c.status == "revision_requested" %}
+                  <div class="alert alert-light border small mt-2 mb-0"><strong>Owner:</strong> {{ c.owner_note }}</div>
+                {% endif %}
+                {% if c.owner_note and c.status == "declined" %}
+                  <div class="alert alert-light border small mt-2 mb-0"><strong>Owner:</strong> {{ c.owner_note }}</div>
+                {% endif %}
+              </div>
+
+              <div class="d-flex gap-2 flex-wrap">
+                {% if c.chat_conversation %}
+                  <a class="btn btn-sm btn-outline-secondary" href="{% url 'conversation_detail' c.chat_conversation.id %}">Chat</a>
+                {% endif %}
+                {% if c.status == 'revision_requested' %}
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'revise_contribution' c.id %}">Update proposal</a>
+                {% endif %}
+                {% if c.status == 'proposed' or c.status == 'revision_requested' %}
+                  <form method="post" action="{% url 'withdraw_contribution' c.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Withdraw</button>
+                  </form>
+                {% endif %}
+                {% if c.status == 'pending' %}
+                  <a class="btn btn-sm btn-outline-dark" href="{% url 'shipping_handoff_slip' c.id %}">Shipping slip + QR</a>
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'upload_proof' c.id %}">Upload proof</a>
+                  <a class="btn btn-sm btn-outline-danger" href="{% url 'open_dispute' c.id %}">Dispute</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info border-0 shadow-sm">
+      No offers yet. Open a request and click “Contribute” to send your first proposal.
+    </div>
+  {% endif %}
+{% endblock %}
+

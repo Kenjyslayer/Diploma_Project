@@ -1,0 +1,71 @@
+{% extends 'core/staff/base_staff.html' %}
+{% block staff_title %}Requests{% endblock %}
+{% block staff_content %}
+  <h1 class="h3 mb-4">All requests</h1>
+  <div class="table-responsive shadow-sm rounded-3 border">
+    <table class="table table-hover align-middle mb-0 small">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th><th>Title</th><th>Category</th><th>Status</th><th>Owner</th><th>Delivery</th><th>Moderation</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+          <tr>
+            <td>{{ r.id }}</td>
+            <td class="fw-semibold">{{ r.title }}</td>
+            <td>{{ r.get_category_display }}</td>
+            <td><span class="badge text-bg-secondary">{{ r.get_status_display }}</span></td>
+            <td>{{ r.created_by|default:"—" }}</td>
+            <td style="white-space: pre-wrap; max-width: 360px;">
+              <div class="text-muted">{{ r.get_delivery_country_display }} · {{ r.get_delivery_kind_display }}</div>
+              {% if r.delivery_country == 'UA' and r.delivery_kind == 'nova_poshta' and r.np_label %}
+                <div>{{ r.np_label }}</div>
+              {% elif r.delivery_country == 'UA' and r.delivery_kind == 'ukrposhta' and r.up_label %}
+                <div>{{ r.up_label }}</div>
+              {% else %}
+                <div class="text-muted">{{ r.delivery_location|default:"—" }}</div>
+              {% endif %}
+            </td>
+            <td style="min-width: 260px;">
+              {% if r.is_hidden %}
+                <span class="badge text-bg-danger">Hidden</span>
+                <div class="text-muted small">
+                  {% if r.hidden_at %}{{ r.hidden_at|date:"Y-m-d H:i" }}{% endif %}
+                  {% if r.hidden_by %}· by {{ r.hidden_by.username }}{% endif %}
+                </div>
+                {% if r.hidden_reason %}<div class="small text-muted">{{ r.hidden_reason }}</div>{% endif %}
+              {% else %}
+                <span class="badge text-bg-success">Visible</span>
+              {% endif %}
+              {% if r.staff_warning %}
+                <div class="alert alert-warning py-2 small mt-2 mb-2">
+                  <strong>Warning:</strong> {{ r.staff_warning }}
+                </div>
+              {% endif %}
+              <form method="post" action="{% url 'staff_request_action' r.id %}" class="d-flex flex-wrap gap-2 mt-2">
+                {% csrf_token %}
+                <input class="form-control form-control-sm" name="note" placeholder="Reason / warning…" style="max-width: 170px;">
+                {% if r.is_hidden %}
+                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="unhide">Restore</button>
+                {% else %}
+                  <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="hide">Hide</button>
+                {% endif %}
+                <button class="btn btn-sm btn-outline-warning" type="submit" name="action" value="warn">Warn</button>
+                {% if r.staff_warning %}
+                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="clear_warning">Clear warning</button>
+                {% endif %}
+              </form>
+              <form method="post" action="{% url 'staff_request_action' r.id %}" class="d-flex flex-wrap gap-2 mt-2">
+                {% csrf_token %}
+                <input class="form-control form-control-sm" name="confirm" placeholder='Type "delete"' style="max-width: 120px;">
+                <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="delete">Delete</button>
+              </form>
+            </td>
+            <td><a class="btn btn-sm btn-outline-primary" href="{% url 'request_detail' r.id %}">View</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

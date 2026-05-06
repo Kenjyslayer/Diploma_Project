@@ -1,0 +1,50 @@
+{% if requests %}
+  <div class="row g-3">
+    {% for req in requests %}
+      <div class="col-12">
+        <div class="card border-0 shadow-sm hover-shadow transition-all">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+              <div>
+                <h2 class="h5 card-title mb-2">
+                  <a class="text-decoration-none" href="{% url 'request_detail' req.id %}">{{ req.title }}</a>
+                </h2>
+                <div class="text-muted small">
+                  <span class="badge text-bg-light border me-1">{{ req.get_category_display }}</span>
+                  <span class="badge {{ req.status_badge_class }} me-1">{{ req.get_status_display }}</span>
+                  {% if req.staff_warning %}
+                    <span class="badge text-bg-warning me-1">Warning</span>
+                  {% endif %}
+                  {% if req.created_by %}
+                    <span>· {{ req.created_by.username }}</span>
+                  {% endif %}
+                </div>
+                <div class="small text-muted mt-2" style="white-space: pre-wrap;">
+                  <i class="bi bi-geo-alt me-1"></i>
+                  {% if req.delivery_country == 'UA' and req.delivery_kind == 'nova_poshta' and req.np_label %}
+                    {{ req.np_label }}
+                  {% elif req.delivery_country == 'UA' and req.delivery_kind == 'ukrposhta' and req.up_label %}
+                    {{ req.up_label }}
+                  {% else %}
+                    {{ req.delivery_location|default:"—" }}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="text-end">
+                <div class="fs-5 fw-bold text-primary">{{ req.remaining_quantity }}<span class="text-muted fs-6 fw-normal"> / {{ req.total_quantity }}</span></div>
+                <div class="small text-muted">remaining</div>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="progress" role="progressbar" aria-label="Fulfillment">
+                <div class="progress-bar" style="width: {{ req.fulfilled_percent }}%">{{ req.fulfilled_percent }}%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-info border-0 shadow-sm">No requests yet.</div>
+{% endif %}

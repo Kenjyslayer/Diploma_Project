@@ -1,0 +1,109 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Create request{% endblock %}
+
+{% block content %}
+  {% if suspicious_block %}
+    <div class="position-fixed top-0 start-0 w-100 h-100" style="background: rgba(0,0,0,.65); z-index: 1060;">
+      <div class="container h-100 d-flex align-items-center justify-content-center py-4">
+        <div class="card border-0 shadow-lg" style="max-width: 720px; width: 100%;">
+          <div class="card-body p-4 p-md-5">
+            <div class="d-flex align-items-start gap-3">
+              <div class="flex-shrink-0">
+                <div class="rounded-circle bg-danger-subtle text-danger d-flex align-items-center justify-content-center" style="width:48px;height:48px;font-size:22px;">
+                  !
+                </div>
+              </div>
+              <div class="flex-grow-1">
+                <h1 class="h4 mb-2">Suspicious request blocked</h1>
+                <p class="mb-2 fw-semibold">
+                  You are not available to request military things or your account gonna be restricted.
+                </p>
+                <p class="text-muted mb-3">
+                  Attempts in last 30 minutes: <strong>{{ attempts|default:0 }}</strong>.
+                  Attempts left before temporary restriction: <strong>{{ attempts_left|default:0 }}</strong>.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a class="btn btn-primary" href="{% url 'profile' %}">Go to Profile</a>
+                  <a class="btn btn-outline-secondary" href="{% url 'create_request' %}">Back to form</a>
+                </div>
+                <p class="text-muted small mt-3 mb-0">
+                  If you believe this is a mistake, rephrase and remove any military terms/calibers.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="page-hero p-4 p-md-5 mb-4">
+    <p class="text-uppercase small text-muted mb-1 fw-semibold">New demand</p>
+    <h1 class="h3 mb-2">Create a request</h1>
+    <p class="text-muted mb-0">
+      Describe what you need. Delivery drop‑off is <strong>chosen automatically</strong> from your Profile preferred post office.
+    </p>
+  </div>
+
+  <form method="post" class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          <div class="fw-semibold mb-1">Please fix the errors below</div>
+          <div class="small">
+            {% for field in form %}
+              {% for err in field.errors %}
+                <div>{{ field.label }}: {{ err }}</div>
+              {% endfor %}
+            {% endfor %}
+            {% for err in form.non_field_errors %}
+              <div>{{ err }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="alert alert-light border">
+        <div class="fw-semibold mb-1">Delivery will be sent to</div>
+        <div class="text-muted small">
+          {% if user.profile.preferred_dropoff_point %}{{ user.profile.preferred_dropoff_point }}{% else %}—{% endif %}
+        </div>
+        <div class="text-muted small mt-1">You can change it anytime in <a href="{% url 'profile' %}">Profile</a>.</div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-8">
+          <label class="form-label fw-semibold">Title</label>
+          {{ form.title }}
+          {% if form.title.errors %}<div class="text-danger small mt-1">{{ form.title.errors }}</div>{% endif %}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Total quantity</label>
+          {{ form.total_quantity }}
+          {% if form.total_quantity.errors %}<div class="text-danger small mt-1">{{ form.total_quantity.errors }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Description</label>
+          {{ form.description }}
+          {% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Category</label>
+          {{ form.category }}
+          {% if form.category.errors %}<div class="text-danger small mt-1">{{ form.category.errors }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4 pt-2 border-top">
+        <a href="{% url 'request_list' %}" class="btn btn-outline-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check2-circle me-1"></i>Publish request</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}

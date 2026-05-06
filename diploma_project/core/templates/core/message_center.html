@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+  <h2 class="mb-3">Message center</h2>
+  <p class="text-muted">Chats are created automatically when you contribute to a request (you and the request owner).</p>
+
+  {% if conversations %}
+    <div class="list-group">
+      {% for conv in conversations %}
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+           href="{% url 'conversation_detail' conv.id %}">
+          <div>
+            <div class="fw-semibold">{{ conv.resource_request.title }}</div>
+            <div class="small text-muted">
+              With {% if user.id == conv.contributor_id %}{{ conv.receiver.username }}{% else %}{{ conv.contributor.username }}{% endif %}
+              · {{ conv.last_activity_at|date:"M j, Y H:i" }}
+            </div>
+          </div>
+          <span class="badge text-bg-primary">Open</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No conversations yet. Contribute to a request to start a chat with its owner.</div>
+  {% endif %}
+{% endblock %}

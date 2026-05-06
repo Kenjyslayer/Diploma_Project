@@ -1,0 +1,28 @@
+{% extends 'core/staff/base_staff.html' %}
+{% block staff_title %}Disputes{% endblock %}
+{% block staff_content %}
+  <h1 class="h3 mb-4">Disputes</h1>
+  {% for d in disputes %}
+    <div class="card mb-3 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between flex-wrap gap-2">
+          <div>
+            <span class="badge {% if d.status == 'open' %}text-bg-danger{% else %}text-bg-success{% endif %}">{{ d.get_status_display }}</span>
+            <span class="fw-semibold ms-2">#{{ d.id }}</span>
+            <span class="text-muted small">· {{ d.created_at }}</span>
+          </div>
+          <form method="post" action="{% url 'staff_dispute_resolve' d.id %}" class="d-flex gap-2 flex-wrap">
+            {% csrf_token %}
+            <input type="text" name="admin_note" class="form-control form-control-sm" placeholder="Resolution note (optional)" style="min-width:200px;">
+            <button type="submit" class="btn btn-sm btn-success" {% if d.status != 'open' %}disabled{% endif %}>Resolve</button>
+          </form>
+        </div>
+        <div class="mt-2 small"><strong>By:</strong> {{ d.created_by.username }} · <strong>Contribution:</strong> {{ d.contribution.id }}</div>
+        <p class="mb-0 mt-2">{{ d.reason }}</p>
+        {% if d.admin_note %}<p class="mt-2 small text-muted mb-0"><strong>Notes:</strong> {{ d.admin_note }}</p>{% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">No disputes.</p>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <div class="page-hero p-4 p-md-5 mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+      <div>
+        <p class="text-uppercase small text-muted mb-1 fw-semibold">Demand board</p>
+        <h1 class="h3 mb-2">Open requests</h1>
+        <p class="text-muted mb-0">Browse needs, contribute partial quantities, and coordinate delivery.</p>
+      </div>
+      {% if user.is_authenticated %}
+        <a class="btn btn-primary btn-lg" href="{% url 'create_request' %}"><i class="bi bi-plus-lg me-2"></i>New request</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% include 'core/request_list_fragment.html' with requests=requests %}
+{% endblock %}

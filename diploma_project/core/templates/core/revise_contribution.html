@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Revise proposal · {{ req.title }}{% endblock %}
+
+{% block content %}
+  <div class="page-hero p-4 mb-4">
+    <h1 class="h3 mb-2">Update your proposal</h1>
+    <p class="text-muted mb-0">{{ req.title }}</p>
+    {% if contribution.owner_note %}
+      <div class="alert alert-primary border-0 mt-3 mb-0">
+        <div class="fw-semibold mb-1">Owner requested changes</div>
+        <div class="small">{{ contribution.owner_note }}</div>
+        <div class="small text-white-50 mt-2">Update the quantity or your drop-off details below, then click “Resubmit proposal”.</div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+      <form method="post" action="{% url 'revise_contribution' contribution.id %}" class="row g-3" novalidate>
+        {% csrf_token %}
+        {% if form.errors %}
+          <div class="col-12">
+            <div class="alert alert-danger py-2 small" role="alert">
+              <strong>Please fix the following.</strong>
+              {% for field in form %}
+                {% for err in field.errors %}
+                  <div class="mt-1">{{ field.label }}: {{ err }}</div>
+                {% endfor %}
+              {% endfor %}
+              {% for err in form.non_field_errors %}
+                <div class="mt-1">{{ err }}</div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+        <div class="col-md-4 col-lg-3">
+          <label class="form-label small fw-semibold">Quantity</label>
+          {{ form.quantity }}
+          {% if form.quantity.errors %}<div class="text-danger small">{{ form.quantity.errors }}</div>{% endif %}
+        </div>
+
+        {% if req.delivery_country == 'UA' %}
+          <div class="col-12" id="delivery-contrib-root"
+               data-mode="ua"
+               data-api-nova-cities="{% url 'api_nova_cities' %}"
+               data-api-nova-warehouses="{% url 'api_nova_warehouses' %}"
+               data-api-up="{% url 'api_ukrposhta_postoffices' %}"
+               data-nova-configured="{% if nova_poshta_configured %}1{% else %}0{% endif %}">
+            <label class="form-label small fw-semibold">Your drop-off (carrier)</label>
+            {{ form.contrib_delivery_kind }}
+            {% if form.contrib_delivery_kind.errors %}<div class="text-danger small">{{ form.contrib_delivery_kind.errors }}</div>{% endif %}
+
+            <div id="contrib-panel-nova" style="display:none;" class="mt-3">
+              <div class="alert alert-info py-2 small" id="contrib-np-api-hint" style="display:none;">
+                Set <code>NOVA_POSHTA_API_KEY</code> to load cities and branches.
+              </div>
+              <div class="mb-2">
+                <label class="form-label small fw-semibold">City</label>
+                <input type="search" class="form-control" id="contrib-np-city-search" placeholder="Kyiv, Lviv…" autocomplete="off" aria-controls="contrib-np-city-results">
+                <div id="contrib-np-city-results" class="list-group mt-1 shadow-sm position-relative" style="max-height:220px;overflow-y:auto;display:none;z-index:5;"></div>
+              </div>
+              <div class="mb-2">
+                <label class="form-label small fw-semibold">Branch / parcel locker</label>
+                <select class="form-select" id="contrib-np-wh-pick"><option value="">Select warehouse…</option></select>
+              </div>
+              {{ form.contrib_np_city_ref }}
+              {{ form.contrib_np_warehouse_ref }}
+              {{ form.contrib_np_label }}
+              {% if form.contrib_np_label.errors %}<div class="text-danger small">{{ form.contrib_np_label.errors }}</div>{% endif %}
+            </div>
+
+            <div id="contrib-panel-ukrposhta" style="display:none;" class="mt-3">
+              <div class="row g-2 align-items-end mb-2">
+                <div class="col-md-4">
+                  <label class="form-label small fw-semibold">Postcode</label>
+                  {{ form.contrib_up_postcode }}
+                </div>
+                <div class="col-md-4">
+                  <button type="button" class="btn btn-outline-primary" id="contrib-btn-up-search">Find offices</button>
+                </div>
+              </div>
+              <div id="contrib-up-results" class="mb-2 small"></div>
+              {{ form.contrib_up_office_id }}
+              <label class="form-label small fw-semibold">Office line</label>
+              {{ form.contrib_up_label }}
+              {% if form.contrib_up_label.errors %}<div class="text-danger small">{{ form.contrib_up_label.errors }}</div>{% endif %}
+            </div>
+          </div>
+        {% else %}
+          <div class="col-12" id="delivery-contrib-root" data-mode="other">
+            <label class="form-label small fw-semibold">How will you ship?</label>
+            {{ form.contrib_dropoff_note }}
+            {% if form.contrib_dropoff_note.errors %}<div class="text-danger small">{{ form.contrib_dropoff_note.errors }}</div>{% endif %}
+          </div>
+        {% endif %}
+
+        <div class="col-12 d-flex gap-2">
+          <button class="btn btn-primary" type="submit">Resubmit proposal</button>
+          <a class="btn btn-outline-secondary" href="{% url 'request_detail' req.id %}">Back</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  {% if req.delivery_country == 'UA' %}
+    <script src="{% static 'core/js/delivery_contribute.js' %}"></script>
+  {% endif %}
+{% endblock %}

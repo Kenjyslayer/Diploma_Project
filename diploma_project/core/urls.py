@@ -1,0 +1,104 @@
+from django.urls import path
+from . import views
+from . import views_shipping
+from . import views_staff
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('register/', views.register, name='register'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
+    path('profile/', views.profile, name='profile'),
+    path('verify-identity/', views.verify_identity, name='verify_identity'),
+    path('create/', views.create_request, name='create_request'),
+    path('requests/', views.request_list, name='request_list'),
+    path('requests/<int:request_id>/', views.request_detail, name='request_detail'),
+    path('requests/<int:request_id>/report/', views.report_request, name='report_request'),
+    path('requests/<int:request_id>/close/', views.close_request, name='close_request'),
+    path('requests/<int:request_id>/contribute/', views.contribute, name='contribute'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('my-requests/', views.my_requests, name='my_requests'),
+    path('my-offers/', views.my_offers, name='my_offers'),
+    path(
+        'requests/<int:request_id>/chat/<int:contributor_id>/',
+        views.owner_open_chat,
+        name='owner_open_chat',
+    ),
+    path(
+        'requests/<int:request_id>/owner-bulk-action/',
+        views.owner_bulk_action,
+        name='owner_bulk_action',
+    ),
+    path(
+        'contributions/<int:contribution_id>/owner-action/',
+        views.contribution_owner_action,
+        name='contribution_owner_action',
+    ),
+    path('contributions/<int:contribution_id>/revise/', views.revise_contribution, name='revise_contribution'),
+    path('contributions/<int:contribution_id>/upload-proof/', views.upload_proof, name='upload_proof'),
+    path(
+        'contributions/<int:contribution_id>/withdraw/',
+        views.withdraw_contribution,
+        name='withdraw_contribution',
+    ),
+    path(
+        'contributions/<int:contribution_id>/shipping-slip/',
+        views.shipping_handoff_slip,
+        name='shipping_handoff_slip',
+    ),
+    path('contributions/<int:contribution_id>/dispute/', views.open_dispute, name='open_dispute'),
+    path('messages/', views.message_center, name='message_center'),
+    path('messages/<int:conversation_id>/', views.conversation_detail, name='conversation_detail'),
+    path('api/shipping/nova/cities/', views_shipping.api_nova_cities, name='api_nova_cities'),
+    path('api/shipping/nova/warehouses/', views_shipping.api_nova_warehouses, name='api_nova_warehouses'),
+    path('api/shipping/ukrposhta/postoffices/', views_shipping.api_ukrposhta_postoffices, name='api_ukrposhta_postoffices'),
+    path('api/public/shipping/nova/cities/', views_shipping.api_public_nova_cities, name='api_public_nova_cities'),
+    path(
+        'api/public/shipping/nova/warehouses/',
+        views_shipping.api_public_nova_warehouses,
+        name='api_public_nova_warehouses',
+    ),
+    path(
+        'api/public/shipping/ukrposhta/postoffices/',
+        views_shipping.api_public_ukrposhta_postoffices,
+        name='api_public_ukrposhta_postoffices',
+    ),
+    path('staff/', views_staff.staff_dashboard, name='staff_dashboard'),
+    path('staff/users/', views_staff.staff_users, name='staff_users'),
+    path('staff/users/<int:user_id>/action/', views_staff.staff_user_action, name='staff_user_action'),
+    path('staff/verifications/', views_staff.staff_verifications, name='staff_verifications'),
+    path(
+        'staff/verifications/<int:user_id>/action/',
+        views_staff.staff_verification_action,
+        name='staff_verification_action',
+    ),
+    path('staff/moderation/', views_staff.staff_moderation, name='staff_moderation'),
+    path(
+        'staff/moderation/<int:report_id>/action/',
+        views_staff.staff_moderation_action,
+        name='staff_moderation_action',
+    ),
+    path(
+        'staff/moderation/<int:report_id>/resolve/',
+        views_staff.staff_moderation_resolve,
+        name='staff_moderation_resolve',
+    ),
+    path('staff/requests/', views_staff.staff_requests, name='staff_requests'),
+    path(
+        'staff/requests/<int:request_id>/action/',
+        views_staff.staff_request_action,
+        name='staff_request_action',
+    ),
+    path('staff/contributions/', views_staff.staff_contributions, name='staff_contributions'),
+    path(
+        'staff/contributions/<int:contribution_id>/action/',
+        views_staff.staff_contribution_status,
+        name='staff_contribution_status',
+    ),
+    path('staff/disputes/', views_staff.staff_disputes, name='staff_disputes'),
+    path(
+        'staff/disputes/<int:dispute_id>/resolve/',
+        views_staff.staff_dispute_resolve,
+        name='staff_dispute_resolve',
+    ),
+]

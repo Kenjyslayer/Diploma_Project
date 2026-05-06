@@ -1,0 +1,126 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Fulfillment{% endblock %} · MVP</title>
+  <link id="app-favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230ea5e9'/%3E%3Ctext x='50' y='64' font-size='60' text-anchor='middle' fill='white'%3EF%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{% static 'core/css/theme.css' %}" rel="stylesheet">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="theme-mvp d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+        <i class="bi bi-box-seam-fill text-info"></i>
+        <span>Fulfillment MVP</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="{% url 'request_list' %}"><i class="bi bi-list-ul me-1"></i>Requests</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'my_requests' %}"><i class="bi bi-inboxes me-1"></i>My requests</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'my_offers' %}"><i class="bi bi-box-arrow-in-up-right me-1"></i>My offers</a></li>
+            {% if user.profile and user.profile.verification_status == 'verified' and not user.profile.banned_at %}
+              {% if user.profile.restricted_until and user.profile.restricted_until > now %}
+              {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'create_request' %}"><i class="bi bi-plus-circle me-1"></i>New request</a></li>
+              {% endif %}
+            {% endif %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'message_center' %}"><i class="bi bi-chat-dots me-1"></i>Messages</a></li>
+            {% if show_staff_portal %}
+              <li class="nav-item"><a class="nav-link text-warning" href="{% url 'staff_dashboard' %}"><i class="bi bi-shield-lock me-1"></i>Admin</a></li>
+            {% endif %}
+          {% endif %}
+        </ul>
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          {% if user.is_authenticated %}
+            <li class="nav-item me-lg-2">
+              <a class="nav-link" href="{% url 'profile' %}"><i class="bi bi-person-circle me-1"></i>{{ user.username }}</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            <li class="nav-item"><a class="btn btn-sm btn-outline-light ms-lg-2 mt-2 mt-lg-0" href="{% url 'register' %}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4 flex-grow-1">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}info{% endif %} mb-3 shadow-sm border-0" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+      <span>MVP · Django templates · Bootstrap 5</span>
+      <span class="small">Nova Poshta / Ukrposhta keys via environment variables</span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (function () {
+      const n = parseInt("{{ notif_count|default:0 }}", 10) || 0;
+      if (!n) return;
+      document.title = "(" + (n > 99 ? "99+" : n) + ") " + document.title;
+      try {
+        const link = document.getElementById("app-favicon");
+        if (!link) return;
+        const size = 64;
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        // base icon
+        ctx.fillStyle = "#0ea5e9";
+        ctx.beginPath();
+        const r = 14;
+        ctx.moveTo(r, 0);
+        ctx.arcTo(size, 0, size, size, r);
+        ctx.arcTo(size, size, 0, size, r);
+        ctx.arcTo(0, size, 0, 0, r);
+        ctx.arcTo(0, 0, size, 0, r);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 38px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("F", size / 2, size / 2 + 2);
+        // badge
+        ctx.fillStyle = "#dc2626";
+        ctx.beginPath();
+        ctx.arc(size - 14, 14, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 16px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(n > 99 ? "99" : String(n), size - 14, 14);
+        link.href = canvas.toDataURL("image/png");
+      } catch (e) {
+        // ignore favicon errors
+      }
+    })();
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

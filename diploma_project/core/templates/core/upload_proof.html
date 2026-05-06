@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Upload proof{% endblock %}
+
+{% block content %}
+  <h2 class="mb-3">Upload proof</h2>
+  <div class="mb-3 text-muted">
+    Contribution to <strong>{{ contribution.request.title }}</strong> ({{ contribution.quantity }}) • Code: {{ contribution.verification_code }}
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="card card-body">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">Upload</button>
+  </form>
+{% endblock %}

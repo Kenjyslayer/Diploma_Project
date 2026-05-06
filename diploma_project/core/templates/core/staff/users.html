@@ -1,0 +1,92 @@
+{% extends 'core/staff/base_staff.html' %}
+{% block staff_title %}Users{% endblock %}
+{% block staff_content %}
+  <h1 class="h3 mb-4">Users</h1>
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+      <div class="fw-semibold mb-2">Filters</div>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-sm {% if not filter %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}">All</a>
+        <a class="btn btn-sm {% if filter == 'banned' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=banned">Banned</a>
+        <a class="btn btn-sm {% if filter == 'restricted' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=restricted">Restricted</a>
+        <a class="btn btn-sm {% if filter == 'verif_pending' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=verif_pending">Verification pending</a>
+        <a class="btn btn-sm {% if filter == 'verif_rejected' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=verif_rejected">Verification rejected</a>
+        <a class="btn btn-sm {% if filter == 'unverified' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=unverified">Not verified</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive shadow-sm rounded-3 border">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Verification</th>
+          <th>Moderation status</th>
+          <th>Admin</th>
+          <th>Quick actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+          <tr>
+            <td class="fw-semibold">{{ u.username }}</td>
+            <td>{{ u.email|default:"—" }}</td>
+            <td>{% if u.profile %}{{ u.profile.role }}{% else %}—{% endif %}</td>
+            <td>
+              {% if u.profile %}
+                {% if u.profile.verification_status == 'verified' %}
+                  <span class="badge text-bg-success">verified</span>
+                {% elif u.profile.verification_status == 'pending' %}
+                  <span class="badge text-bg-warning">pending</span>
+                {% elif u.profile.verification_status == 'rejected' %}
+                  <span class="badge text-bg-danger">rejected</span>
+                {% else %}
+                  <span class="badge text-bg-secondary">not submitted</span>
+                {% endif %}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td>
+              {% if u.profile and u.profile.banned_at %}
+                <span class="badge text-bg-danger">banned</span>
+              {% elif u.profile and u.profile.restricted_until and u.profile.restricted_until > now %}
+                <span class="badge text-bg-warning">restricted</span>
+                <div class="small text-muted">until {{ u.profile.restricted_until|date:"Y-m-d H:i" }} UTC</div>
+              {% else %}
+                <span class="badge text-bg-success">ok</span>
+              {% endif %}
+            </td>
+            <td>
+              <a class="btn btn-sm btn-outline-secondary" href="/admin/auth/user/{{ u.id }}/change/" target="_blank" rel="noopener">User</a>
+              {% if u.profile %}
+                <a class="btn btn-sm btn-outline-secondary" href="/admin/core/profile/{{ u.profile.id }}/change/" target="_blank" rel="noopener">Profile</a>
+              {% endif %}
+            </td>
+            <td style="min-width: 420px;">
+              {% if u.profile %}
+                <form method="post" action="{% url 'staff_user_action' u.id %}" class="d-flex flex-wrap gap-2">
+                  {% csrf_token %}
+                  <input class="form-control form-control-sm" name="note" placeholder="Note…" style="max-width: 200px;">
+                  <select class="form-select form-select-sm" name="hours" style="max-width: 90px;">
+                    <option value="1">1h</option>
+                    <option value="24" selected>24h</option>
+                    <option value="168">7d</option>
+                  </select>
+                  <button class="btn btn-sm btn-outline-warning" type="submit" name="action" value="restrict_temp">Temp restrict</button>
+                  <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="ban_permanent">Ban</button>
+                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="unrestrict">Unban</button>
+                </form>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

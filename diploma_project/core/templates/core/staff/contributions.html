@@ -1,0 +1,38 @@
+{% extends 'core/staff/base_staff.html' %}
+{% block staff_title %}Contributions{% endblock %}
+{% block staff_content %}
+  <h1 class="h3 mb-4">Contributions</h1>
+  <div class="table-responsive shadow-sm rounded-3 border">
+    <table class="table table-hover align-middle mb-0 small">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th><th>User</th><th>Request</th><th>Qty</th><th>Status</th><th>Expires</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in contributions %}
+          <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.user.username }}</td>
+            <td><a href="{% url 'request_detail' c.request.id %}">{{ c.request.title }}</a></td>
+            <td>{{ c.quantity }}</td>
+            <td><span class="badge text-bg-secondary">{{ c.get_status_display }}</span></td>
+            <td>{{ c.expires_at|date:"Y-m-d H:i"|default:"—" }}</td>
+            <td>
+              <form method="post" action="{% url 'staff_contribution_status' c.id %}" class="d-flex flex-wrap gap-1">
+                {% csrf_token %}
+                {% if c.status == 'pending' %}
+                  <button class="btn btn-sm btn-success" name="action" value="approve">Approve</button>
+                  <button class="btn btn-sm btn-outline-danger" name="action" value="reject">Reject</button>
+                {% endif %}
+                {% if c.status == 'approved' and c.proof_file %}
+                  <button class="btn btn-sm btn-primary" name="action" value="verify">Verify</button>
+                {% endif %}
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

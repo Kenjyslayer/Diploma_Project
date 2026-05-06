@@ -1,0 +1,200 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+  <div class="page-hero p-4 mb-4">
+    <h1 class="h4 mb-1">Profile</h1>
+    <p class="text-muted small mb-0">
+      {{ user.username }} · {{ user.email|default:"—" }}
+      {% if profile %}· {{ profile.get_role_display }}{% endif %}
+    </p>
+  </div>
+
+  {% if profile.banned_at %}
+    <div class="alert alert-danger border-0 shadow-sm">
+      <strong>Account banned.</strong>
+      You cannot create requests or contribute.
+      {% if profile.banned_reason %}<div class="small mt-1 text-white-50">{{ profile.banned_reason }}</div>{% endif %}
+    </div>
+  {% elif profile.restricted_until and profile.restricted_until > now %}
+    <div class="alert alert-warning border-0 shadow-sm">
+      <strong>Account restricted until {{ profile.restricted_until|date:"Y-m-d H:i" }} UTC.</strong>
+      You cannot create requests or contribute right now.
+      {% if profile.restricted_reason %}<div class="small mt-1">{{ profile.restricted_reason }}</div>{% endif %}
+    </div>
+  {% endif %}
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+        <div>
+          <div class="fw-semibold">Profile progress</div>
+          <div class="text-muted small">Complete these steps to unlock posting and contributing.</div>
+        </div>
+        <div class="small text-muted">{{ profile_progress_percent }}%</div>
+      </div>
+      <div class="progress mb-3" role="progressbar" aria-label="Profile progress" aria-valuenow="{{ profile_progress_percent }}" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: {{ profile_progress_percent }}%"></div>
+      </div>
+      <div class="row g-2 small">
+        {% for label, ok in profile_steps %}
+          <div class="col-md-4">
+            {% if ok %}
+              <span class="badge text-bg-success me-1">✓</span>
+            {% else %}
+              <span class="badge text-bg-secondary me-1">•</span>
+            {% endif %}
+            {{ label }}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="mt-3 d-flex flex-wrap gap-2 align-items-center">
+        <button class="btn btn-outline-secondary btn-sm" type="button" disabled>Verify with BankID (coming soon)</button>
+        <span class="text-muted small">BankID integration placeholder — documents upload is required for now.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="h6 mb-2">Verification status</h2>
+          <p class="small mb-2">
+            Status:
+            {% if profile.verification_status == 'verified' %}
+              <span class="badge text-bg-success">{{ profile.get_verification_status_display }}</span>
+            {% elif profile.verification_status == 'pending' %}
+              <span class="badge text-bg-warning">{{ profile.get_verification_status_display }}</span>
+            {% elif profile.verification_status == 'rejected' %}
+              <span class="badge text-bg-danger">{{ profile.get_verification_status_display }}</span>
+            {% else %}
+              <span class="badge text-bg-secondary">{{ profile.get_verification_status_display }}</span>
+            {% endif %}
+          </p>
+          {% if profile.verification_note %}
+            <div class="alert alert-light border small mb-3"><strong>Admin note:</strong> {{ profile.verification_note }}</div>
+          {% endif %}
+
+          {% if needs_submission %}
+            <div class="alert alert-danger border-0 small">
+              {% if profile.verification_status == 'pending' %}
+                <strong>Pending review:</strong> you can create requests or contribute only after staff approval.
+              {% else %}
+                <strong>Action required:</strong> upload verification documents before you can create requests or contribute.
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="action" value="verify">
+            {% for field in verify_form %}
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+              </div>
+            {% endfor %}
+            <button class="btn btn-primary w-100" type="submit">Upload documents</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="h6 mb-2">Profile settings</h2>
+          <p class="text-muted small mb-3">Update your personal details and preferred drop-off point.</p>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="action" value="settings">
+
+            <div class="row g-2">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold" for="{{ settings_form.first_name.id_for_label }}">{{ settings_form.first_name.label }}</label>
+                {{ settings_form.first_name }}{% if settings_form.first_name.errors %}<div class="text-danger small">{{ settings_form.first_name.errors }}</div>{% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold" for="{{ settings_form.last_name.id_for_label }}">{{ settings_form.last_name.label }}</label>
+                {{ settings_form.last_name }}{% if settings_form.last_name.errors %}<div class="text-danger small">{{ settings_form.last_name.errors }}</div>{% endif %}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold" for="{{ settings_form.email.id_for_label }}">{{ settings_form.email.label }}</label>
+              {{ settings_form.email }}{% if settings_form.email.errors %}<div class="text-danger small">{{ settings_form.email.errors }}</div>{% endif %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold" for="{{ settings_form.phone_number.id_for_label }}">{{ settings_form.phone_number.label }}</label>
+              {{ settings_form.phone_number }}{% if settings_form.phone_number.errors %}<div class="text-danger small">{{ settings_form.phone_number.errors }}</div>{% endif %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold" for="{{ settings_form.role.id_for_label }}">{{ settings_form.role.label }}</label>
+              {{ settings_form.role }}{% if settings_form.role.errors %}<div class="text-danger small">{{ settings_form.role.errors }}</div>{% endif %}
+              <div class="form-text small">Changing account type resets verification and requires new documents.</div>
+            </div>
+
+            <hr class="my-3">
+            <h3 class="h6 mb-2">Preferred drop-off point</h3>
+            <div id="profile-dropoff-root"
+                 data-api-nova-cities="{% url 'api_nova_cities' %}"
+                 data-api-nova-warehouses="{% url 'api_nova_warehouses' %}"
+                 data-api-up="{% url 'api_ukrposhta_postoffices' %}"
+                 data-nova-configured="{% if nova_poshta_configured %}1{% else %}0{% endif %}">
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ settings_form.preferred_dropoff_kind.id_for_label }}">{{ settings_form.preferred_dropoff_kind.label }}</label>
+                {{ settings_form.preferred_dropoff_kind }}
+                {% if settings_form.preferred_dropoff_kind.errors %}<div class="text-danger small">{{ settings_form.preferred_dropoff_kind.errors }}</div>{% endif %}
+              </div>
+
+              <div id="pref-panel-nova" style="display:none;" class="mb-3">
+                <div class="alert alert-info py-2 small" id="pref-np-api-hint" style="display:none;">
+                  Nova Poshta API key is missing. Offline demo cities are available.
+                </div>
+                <label class="form-label fw-semibold small">City</label>
+                <input type="search" class="form-control" id="pref-np-city-search" placeholder="Kyiv, Lviv…" autocomplete="off" aria-controls="pref-np-city-results">
+                <div id="pref-np-city-results" class="list-group mt-1 shadow-sm position-relative" style="max-height:220px;overflow-y:auto;display:none;z-index:5;"></div>
+                <div class="mt-2">
+                  <label class="form-label fw-semibold small">Branch / parcel locker</label>
+                  <select class="form-select" id="pref-np-wh-pick"><option value="">Select branch…</option></select>
+                </div>
+                {{ settings_form.preferred_np_city_ref }}
+                {{ settings_form.preferred_np_warehouse_ref }}
+                {{ settings_form.preferred_np_label }}
+                {% if settings_form.preferred_np_label.errors %}<div class="text-danger small">{{ settings_form.preferred_np_label.errors }}</div>{% endif %}
+              </div>
+
+              <div id="pref-panel-ukrposhta" style="display:none;" class="mb-3">
+                <div class="row g-2 align-items-end mb-2">
+                  <div class="col-md-5">
+                    <label class="form-label fw-semibold small">Postcode</label>
+                    {{ settings_form.preferred_up_postcode }}
+                  </div>
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-outline-primary" id="pref-btn-up-search">Find offices</button>
+                  </div>
+                </div>
+                <div id="pref-up-results" class="mb-2 small"></div>
+                {{ settings_form.preferred_up_office_id }}
+                <label class="form-label fw-semibold small">Office line</label>
+                {{ settings_form.preferred_up_label }}
+                {% if settings_form.preferred_up_label.errors %}<div class="text-danger small">{{ settings_form.preferred_up_label.errors }}</div>{% endif %}
+              </div>
+            </div>
+
+            <button class="btn btn-outline-primary w-100" type="submit">Save profile</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'core/js/delivery_profile_dropoff.js' %}"></script>
+{% endblock %}
+

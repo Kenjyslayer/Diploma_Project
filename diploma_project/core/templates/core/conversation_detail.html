@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Chat · {{ conversation.resource_request.title }}{% endblock %}
+
+{% block content %}
+  <div class="mb-3">
+    <a href="{% url 'message_center' %}" class="text-decoration-none">← Back to messages</a>
+  </div>
+  <h2 class="h4 mb-1">{{ conversation.resource_request.title }}</h2>
+  <p class="text-muted small">Chat with <strong>{{ other_user.username }}</strong> (coordinating delivery &amp; handoff).</p>
+
+  <div class="card mb-3" style="max-height: 420px; overflow-y: auto;">
+    <div class="card-body">
+      {% for m in chat_messages %}
+        <div class="mb-3 {% if m.sender_id == user.id %}text-end{% endif %}">
+          {% if m.body|slice:":8" == "[SYSTEM]" %}
+            <div class="d-inline-block text-start bg-white border rounded p-2 px-3" style="max-width: 85%;">
+              <div class="small text-muted mb-1">System · {{ m.created_at|date:"M j, H:i" }}</div>
+              <div class="text-break text-muted">{{ m.body|slice:"9:"|linebreaksbr }}</div>
+            </div>
+          {% else %}
+            <div class="d-inline-block text-start bg-light border rounded p-2 px-3" style="max-width: 85%;">
+              <div class="small text-muted mb-1">{{ m.sender.username }} · {{ m.created_at|date:"M j, H:i" }}</div>
+              <div class="text-break">{{ m.body|linebreaksbr }}</div>
+            </div>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="text-muted mb-0">No messages yet. Say hello and agree on drop-off details.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <form method="post" class="card card-body">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Send</button>
+  </form>
+{% endblock %}

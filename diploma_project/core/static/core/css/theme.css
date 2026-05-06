@@ -1,0 +1,148 @@
+/* MVP theme — calm, readable, consistent with Bootstrap 5 */
+
+:root {
+  --mv-bg: #0f1419;
+  --mv-bg-soft: #151c24;
+  --mv-card: #ffffff;
+  --mv-accent: #3d8bfd;
+  --mv-accent-2: #20c997;
+  --mv-muted: #6c757d;
+  --mv-radius: 14px;
+  --mv-shadow: 0 12px 40px rgba(15, 20, 25, 0.08);
+}
+
+body.theme-mvp {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(180deg, #eef2f7 0%, #f8fafc 40%, #eef2f7 100%);
+  color: #1a2330;
+  min-height: 100vh;
+}
+
+.theme-mvp .navbar.app-navbar {
+  background: linear-gradient(90deg, var(--mv-bg) 0%, #1a2430 100%) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.theme-mvp .navbar .nav-link {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 0 2px;
+  padding: 0.4rem 0.75rem !important;
+}
+
+.theme-mvp .navbar .nav-link:hover,
+.theme-mvp .navbar .nav-link:focus {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.theme-mvp .navbar .navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.theme-mvp .page-hero {
+  background: var(--mv-card);
+  border-radius: var(--mv-radius);
+  box-shadow: var(--mv-shadow);
+  border: 1px solid rgba(15, 20, 25, 0.06);
+}
+
+.theme-mvp .card {
+  border-radius: var(--mv-radius);
+  border: 1px solid rgba(15, 20, 25, 0.08);
+  box-shadow: 0 6px 24px rgba(15, 20, 25, 0.05);
+}
+
+.theme-mvp .card-header {
+  border-top-left-radius: var(--mv-radius) !important;
+  border-top-right-radius: var(--mv-radius) !important;
+  font-weight: 600;
+}
+
+.theme-mvp .btn {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.5rem 1.1rem;
+}
+
+.theme-mvp .btn-primary {
+  background: linear-gradient(90deg, #0d6efd, #3d8bfd);
+  border: none;
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.25);
+}
+
+.theme-mvp .btn-success {
+  background: linear-gradient(90deg, #198754, #20c997);
+  border: none;
+  box-shadow: 0 6px 20px rgba(32, 201, 151, 0.2);
+}
+
+.theme-mvp .form-control,
+.theme-mvp .form-select {
+  border-radius: 10px;
+  border: 1px solid rgba(15, 20, 25, 0.12);
+}
+
+.theme-mvp .form-control:focus,
+.theme-mvp .form-select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+  border-color: rgba(13, 110, 253, 0.5);
+}
+
+.theme-mvp .text-muted,
+.theme-mvp .small {
+  color: #5b6472 !important;
+}
+
+.theme-mvp .site-footer {
+  border-top: 1px solid rgba(15, 20, 25, 0.08);
+  margin-top: 3rem;
+  padding: 1.5rem 0 2rem;
+  color: var(--mv-muted);
+  font-size: 0.9rem;
+}
+
+.theme-mvp .badge {
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.theme-mvp .progress {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(15, 20, 25, 0.08);
+}
+
+.theme-mvp .progress-bar {
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0d6efd, #20c997);
+}
+
+/* Staff sidebar */
+.staff-sidebar {
+  min-height: calc(100vh - 56px);
+  background: var(--mv-bg-soft);
+  color: #e8eef5;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.staff-sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.86);
+  border-radius: 10px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.staff-sidebar .nav-link:hover,
+.staff-sidebar .nav-link.active {
+  background: rgba(61, 139, 253, 0.2);
+  color: #fff;
+}
+
+.theme-mvp .card.hover-shadow:hover {
+  box-shadow: 0 12px 32px rgba(15, 20, 25, 0.1) !important;
+  transform: translateY(-1px);
+  transition: 0.2s ease;
+}
