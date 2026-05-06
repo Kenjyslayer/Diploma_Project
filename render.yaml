@@ -4,13 +4,14 @@ services:
     env: python
     plan: free
     buildCommand: |
-      pip install -r diploma_project/requirements.txt
+      python -m pip install -r diploma_project/requirements.txt
       python diploma_project/manage.py collectstatic --noinput
-      python diploma_project/manage.py migrate --noinput
-    startCommand: gunicorn diploma_project.wsgi:application --chdir diploma_project
+    startCommand: >
+      bash -lc "python diploma_project/manage.py migrate --noinput &&
+      gunicorn diploma_project.wsgi:application --chdir diploma_project"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.13.1
+        value: 3.12.4
       - key: DEBUG
         value: "0"
       - key: ALLOWED_HOSTS
