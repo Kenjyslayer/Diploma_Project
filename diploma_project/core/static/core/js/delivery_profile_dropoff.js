@@ -51,6 +51,38 @@
     }
   }
 
+  function prefillFromHiddenFieldsIfAny() {
+    const kind = elKind ? elKind.value : "";
+    if (kind === "nova_poshta") {
+      const cityRef = (elNpCityRef && elNpCityRef.value) || "";
+      const whRef = (elNpWhRef && elNpWhRef.value) || "";
+      const label = (elNpLabel && elNpLabel.value) || "";
+      if (whRef && label && npWhPick) {
+        // Ensure the select shows the already-chosen branch on page reload
+        npWhPick.innerHTML = "";
+        const opt0 = document.createElement("option");
+        opt0.value = "";
+        opt0.textContent = "Select branch…";
+        npWhPick.appendChild(opt0);
+        const opt = document.createElement("option");
+        opt.value = whRef;
+        opt.textContent = label;
+        opt.selected = true;
+        npWhPick.appendChild(opt);
+      }
+      if (npCitySearch && !npCitySearch.value && cityRef) {
+        npCitySearch.value = "Selected city ref: " + cityRef;
+      }
+    }
+    if (kind === "ukrposhta") {
+      // Postcode and office line are regular inputs/textarea and should already retain values.
+      // If hidden office id exists, keep it as-is; no extra UI needed.
+      if (elUpOfficeId && elUpOfficeId.value && elUpLabel && elUpLabel.value) {
+        // no-op: just keep existing values visible in textarea
+      }
+    }
+  }
+
   async function loadCities(q) {
     if (!npConfigured || !q || q.length < 2) return [];
     const data = await fetchJSON(apiNovaCities + "?q=" + encodeURIComponent(q));
@@ -198,5 +230,6 @@
   if (elKind) elKind.addEventListener("change", togglePanels);
 
   togglePanels();
+  prefillFromHiddenFieldsIfAny();
 })();
 
