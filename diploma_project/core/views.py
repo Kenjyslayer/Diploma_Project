@@ -1017,10 +1017,24 @@ def report_request(request, request_id: int):
     if req.created_by_id == request.user.id:
         messages.error(request, "You cannot report your own request.")
         return redirect("request_detail", request_id=req.id)
+    reason_code = (request.POST.get("reason_code") or "").strip()
     note = (request.POST.get("note") or "").strip()
-    if not note:
-        messages.error(request, "Please write a short reason for the report.")
+    if not reason_code:
+        messages.error(request, "Select a reason for the report.")
         return redirect("request_detail", request_id=req.id)
+    if reason_code == "other" and not note:
+        messages.error(request, "Please add details for 'Other'.")
+        return redirect("request_detail", request_id=req.id)
+    reasons = {
+        "absurd": "Абсурдний / тролінг",
+        "porn": "Порнографія / 18+",
+        "hate": "Хейт / дискримінація",
+        "fraud": "Шахрайство / збір коштів",
+        "military": "Військовий контент під “civil”",
+        "spam": "Спам",
+        "other": "Інше",
+    }
+    reason_label = reasons.get(reason_code, reason_code)
     from .models import ModerationReport
 
     # De-dupe: one open report per user+request within 24h
@@ -1034,13 +1048,16 @@ def report_request(request, request_id: int):
     if existing:
         messages.info(request, "You already reported this request recently. Staff will review it.")
         return redirect("request_detail", request_id=req.id)
+    reason_text = f"User report ({reason_label})"
+    if note:
+        reason_text = f"{reason_text}: {note}"
     ModerationReport.objects.create(
         created_by=request.user,
         request=req,
         snapshot_title=(req.title or "")[:255],
         snapshot_description=(req.description or ""),
         snapshot_category=(req.category or ""),
-        reason=f"User report: {note}"[:255],
+        reason=reason_text[:255],
         score=80,
     )
     messages.success(request, "Reported. Staff will review this request.")
