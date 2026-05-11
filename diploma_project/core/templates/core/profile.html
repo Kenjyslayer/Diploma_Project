@@ -5,11 +5,24 @@
 
 {% block content %}
   <div class="page-hero p-4 mb-4">
-    <h1 class="h4 mb-1">Profile</h1>
-    <p class="text-muted small mb-0">
-      {{ user.username }} · {{ user.email|default:"—" }}
-      {% if profile %}· {{ profile.get_role_display }}{% endif %}
-    </p>
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <h1 class="h4 mb-1">Profile</h1>
+        <p class="text-muted small mb-0">
+          {{ user.username }} · {{ user.email|default:"—" }}
+          {% if profile %}· {{ profile.get_role_display }}{% endif %}
+        </p>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        {% if profile.profile_photo and profile.profile_photo_public %}
+          <img src="{{ profile.profile_photo.url }}" alt="Profile photo" class="rounded-circle border" style="width:56px;height:56px;object-fit:cover;">
+        {% else %}
+          <div class="rounded-circle border bg-light d-flex align-items-center justify-content-center text-muted" style="width:56px;height:56px;">
+            <i class="bi bi-person" style="font-size:24px;"></i>
+          </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
 
   {% if profile.banned_at %}
@@ -110,84 +123,103 @@
           <h2 class="h6 mb-2">Profile settings</h2>
           <p class="text-muted small mb-3">Update your personal details and preferred drop-off point.</p>
 
-          <form method="post" novalidate>
-            {% csrf_token %}
-            <input type="hidden" name="action" value="settings">
+          <button class="btn btn-outline-primary w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#profile-settings-collapse" aria-expanded="false" aria-controls="profile-settings-collapse">
+            Edit profile
+          </button>
 
-            <div class="row g-2">
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold" for="{{ settings_form.first_name.id_for_label }}">{{ settings_form.first_name.label }}</label>
-                {{ settings_form.first_name }}{% if settings_form.first_name.errors %}<div class="text-danger small">{{ settings_form.first_name.errors }}</div>{% endif %}
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold" for="{{ settings_form.last_name.id_for_label }}">{{ settings_form.last_name.label }}</label>
-                {{ settings_form.last_name }}{% if settings_form.last_name.errors %}<div class="text-danger small">{{ settings_form.last_name.errors }}</div>{% endif %}
-              </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold" for="{{ settings_form.email.id_for_label }}">{{ settings_form.email.label }}</label>
-              {{ settings_form.email }}{% if settings_form.email.errors %}<div class="text-danger small">{{ settings_form.email.errors }}</div>{% endif %}
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold" for="{{ settings_form.phone_number.id_for_label }}">{{ settings_form.phone_number.label }}</label>
-              {{ settings_form.phone_number }}{% if settings_form.phone_number.errors %}<div class="text-danger small">{{ settings_form.phone_number.errors }}</div>{% endif %}
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold" for="{{ settings_form.role.id_for_label }}">{{ settings_form.role.label }}</label>
-              {{ settings_form.role }}{% if settings_form.role.errors %}<div class="text-danger small">{{ settings_form.role.errors }}</div>{% endif %}
-              <div class="form-text small">Changing account type resets verification and requires new documents.</div>
-            </div>
+          <div class="collapse" id="profile-settings-collapse">
+            <form method="post" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+              <input type="hidden" name="action" value="settings">
 
-            <hr class="my-3">
-            <h3 class="h6 mb-2">Preferred drop-off point</h3>
-            <div id="profile-dropoff-root"
-                 data-api-nova-cities="{% url 'api_nova_cities' %}"
-                 data-api-nova-warehouses="{% url 'api_nova_warehouses' %}"
-                 data-api-up="{% url 'api_ukrposhta_postoffices' %}"
-                 data-nova-configured="{% if nova_poshta_configured %}1{% else %}0{% endif %}">
+              <div class="row g-2">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold" for="{{ settings_form.first_name.id_for_label }}">{{ settings_form.first_name.label }}</label>
+                  {{ settings_form.first_name }}{% if settings_form.first_name.errors %}<div class="text-danger small">{{ settings_form.first_name.errors }}</div>{% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold" for="{{ settings_form.last_name.id_for_label }}">{{ settings_form.last_name.label }}</label>
+                  {{ settings_form.last_name }}{% if settings_form.last_name.errors %}<div class="text-danger small">{{ settings_form.last_name.errors }}</div>{% endif %}
+                </div>
+              </div>
               <div class="mb-3">
-                <label class="form-label fw-semibold" for="{{ settings_form.preferred_dropoff_kind.id_for_label }}">{{ settings_form.preferred_dropoff_kind.label }}</label>
-                {{ settings_form.preferred_dropoff_kind }}
-                {% if settings_form.preferred_dropoff_kind.errors %}<div class="text-danger small">{{ settings_form.preferred_dropoff_kind.errors }}</div>{% endif %}
+                <label class="form-label fw-semibold" for="{{ settings_form.email.id_for_label }}">{{ settings_form.email.label }}</label>
+                {{ settings_form.email }}{% if settings_form.email.errors %}<div class="text-danger small">{{ settings_form.email.errors }}</div>{% endif %}
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ settings_form.phone_number.id_for_label }}">{{ settings_form.phone_number.label }}</label>
+                {{ settings_form.phone_number }}{% if settings_form.phone_number.errors %}<div class="text-danger small">{{ settings_form.phone_number.errors }}</div>{% endif %}
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ settings_form.role.id_for_label }}">{{ settings_form.role.label }}</label>
+                {{ settings_form.role }}{% if settings_form.role.errors %}<div class="text-danger small">{{ settings_form.role.errors }}</div>{% endif %}
+                <div class="form-text small">Changing account type resets verification and requires new documents.</div>
               </div>
 
-              <div id="pref-panel-nova" style="display:none;" class="mb-3">
-                <div class="alert alert-info py-2 small" id="pref-np-api-hint" style="display:none;">
-                  Nova Poshta API key is missing. Offline demo cities are available.
-                </div>
-                <label class="form-label fw-semibold small">City</label>
-                <input type="search" class="form-control" id="pref-np-city-search" placeholder="Kyiv, Lviv…" autocomplete="off" aria-controls="pref-np-city-results">
-                <div id="pref-np-city-results" class="list-group mt-1 shadow-sm position-relative" style="max-height:220px;overflow-y:auto;display:none;z-index:5;"></div>
-                <div class="mt-2">
-                  <label class="form-label fw-semibold small">Branch / parcel locker</label>
-                  <select class="form-select" id="pref-np-wh-pick"><option value="">Select branch…</option></select>
-                </div>
-                {{ settings_form.preferred_np_city_ref }}
-                {{ settings_form.preferred_np_warehouse_ref }}
-                {{ settings_form.preferred_np_label }}
-                {% if settings_form.preferred_np_label.errors %}<div class="text-danger small">{{ settings_form.preferred_np_label.errors }}</div>{% endif %}
+              <hr class="my-3">
+              <h3 class="h6 mb-2">Profile photo</h3>
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ settings_form.profile_photo.id_for_label }}">Upload new photo</label>
+                {{ settings_form.profile_photo }}
+                {% if settings_form.profile_photo.errors %}<div class="text-danger small">{{ settings_form.profile_photo.errors }}</div>{% endif %}
+              </div>
+              <div class="form-check mb-3">
+                {{ settings_form.profile_photo_public }}
+                <label class="form-check-label" for="{{ settings_form.profile_photo_public.id_for_label }}">Show my profile photo publicly</label>
               </div>
 
-              <div id="pref-panel-ukrposhta" style="display:none;" class="mb-3">
-                <div class="row g-2 align-items-end mb-2">
-                  <div class="col-md-5">
-                    <label class="form-label fw-semibold small">Postcode</label>
-                    {{ settings_form.preferred_up_postcode }}
+              <hr class="my-3">
+              <h3 class="h6 mb-2">Preferred drop-off point</h3>
+              <div id="profile-dropoff-root"
+                   data-api-nova-cities="{% url 'api_nova_cities' %}"
+                   data-api-nova-warehouses="{% url 'api_nova_warehouses' %}"
+                   data-api-up="{% url 'api_ukrposhta_postoffices' %}"
+                   data-nova-configured="{% if nova_poshta_configured %}1{% else %}0{% endif %}">
+                <div class="mb-3">
+                  <label class="form-label fw-semibold" for="{{ settings_form.preferred_dropoff_kind.id_for_label }}">{{ settings_form.preferred_dropoff_kind.label }}</label>
+                  {{ settings_form.preferred_dropoff_kind }}
+                  {% if settings_form.preferred_dropoff_kind.errors %}<div class="text-danger small">{{ settings_form.preferred_dropoff_kind.errors }}</div>{% endif %}
+                </div>
+
+                <div id="pref-panel-nova" style="display:none;" class="mb-3">
+                  <div class="alert alert-info py-2 small" id="pref-np-api-hint" style="display:none;">
+                    Nova Poshta API key is missing. Offline demo cities are available.
                   </div>
-                  <div class="col-md-4">
-                    <button type="button" class="btn btn-outline-primary" id="pref-btn-up-search">Find offices</button>
+                  <label class="form-label fw-semibold small">City</label>
+                  <input type="search" class="form-control" id="pref-np-city-search" placeholder="Kyiv, Lviv…" autocomplete="off" aria-controls="pref-np-city-results">
+                  <div id="pref-np-city-results" class="list-group mt-1 shadow-sm position-relative" style="max-height:220px;overflow-y:auto;display:none;z-index:5;"></div>
+                  <div class="mt-2">
+                    <label class="form-label fw-semibold small">Branch / parcel locker</label>
+                    <select class="form-select" id="pref-np-wh-pick"><option value="">Select branch…</option></select>
                   </div>
+                  {{ settings_form.preferred_np_city_ref }}
+                  {{ settings_form.preferred_np_warehouse_ref }}
+                  {{ settings_form.preferred_np_city_label }}
+                  {{ settings_form.preferred_np_label }}
+                  {% if settings_form.preferred_np_label.errors %}<div class="text-danger small">{{ settings_form.preferred_np_label.errors }}</div>{% endif %}
                 </div>
-                <div id="pref-up-results" class="mb-2 small"></div>
-                {{ settings_form.preferred_up_office_id }}
-                <label class="form-label fw-semibold small">Office line</label>
-                {{ settings_form.preferred_up_label }}
-                {% if settings_form.preferred_up_label.errors %}<div class="text-danger small">{{ settings_form.preferred_up_label.errors }}</div>{% endif %}
-              </div>
-            </div>
 
-            <button class="btn btn-outline-primary w-100" type="submit">Save profile</button>
-          </form>
+                <div id="pref-panel-ukrposhta" style="display:none;" class="mb-3">
+                  <div class="row g-2 align-items-end mb-2">
+                    <div class="col-md-5">
+                      <label class="form-label fw-semibold small">Postcode</label>
+                      {{ settings_form.preferred_up_postcode }}
+                    </div>
+                    <div class="col-md-4">
+                      <button type="button" class="btn btn-outline-primary" id="pref-btn-up-search">Find offices</button>
+                    </div>
+                  </div>
+                  <div id="pref-up-results" class="mb-2 small"></div>
+                  {{ settings_form.preferred_up_office_id }}
+                  <label class="form-label fw-semibold small">Office line</label>
+                  {{ settings_form.preferred_up_label }}
+                  {% if settings_form.preferred_up_label.errors %}<div class="text-danger small">{{ settings_form.preferred_up_label.errors }}</div>{% endif %}
+                </div>
+              </div>
+
+              <button class="btn btn-outline-primary w-100" type="submit">Save profile</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

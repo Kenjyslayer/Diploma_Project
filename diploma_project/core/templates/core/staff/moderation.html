@@ -20,6 +20,9 @@
               <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
               <td>
                 <div class="fw-semibold">{{ r.created_by.username|default:"—" }}</div>
+                {% if r.created_by and r.created_by.profile %}
+                  <div class="text-muted small">Role: {{ r.created_by.profile.get_role_display }}</div>
+                {% endif %}
                 {% if r.created_by and r.created_by.profile.banned_at %}
                   <span class="badge text-bg-danger">Banned</span>
                 {% elif r.created_by and r.created_by.profile.restricted_until and r.created_by.profile.restricted_until > now %}
@@ -42,8 +45,8 @@
                 <div class="fw-semibold">{{ r.snapshot_title|default:"(no title)" }}</div>
                 <div class="text-muted" style="white-space: pre-wrap;">{{ r.snapshot_description|truncatechars:220 }}</div>
               </td>
-              <td style="min-width: 360px;">
-                <form method="post" action="{% url 'staff_moderation_action' r.id %}" class="d-flex flex-wrap gap-2 mb-2">
+              <td style="min-width: 380px;">
+                <form method="post" action="{% url 'staff_moderation_action' r.id %}" class="d-flex flex-wrap gap-2 mb-2 align-items-center">
                   {% csrf_token %}
                   <input class="form-control form-control-sm" name="note" placeholder="Note…" style="max-width: 200px;">
                   <select class="form-select form-select-sm" name="hours" style="max-width: 90px;">
@@ -51,9 +54,11 @@
                     <option value="24" selected>24h</option>
                     <option value="168">7d</option>
                   </select>
-                  <button class="btn btn-sm btn-outline-warning" type="submit" name="action" value="restrict_temp">Temp restrict</button>
-                  <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="ban_permanent">Ban</button>
-                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="unrestrict">Unban</button>
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Moderation actions">
+                    <button class="btn btn-outline-warning" type="submit" name="action" value="restrict_temp">Temp restrict</button>
+                    <button class="btn btn-outline-danger" type="submit" name="action" value="ban_permanent">Ban</button>
+                    <button class="btn btn-outline-secondary" type="submit" name="action" value="unrestrict">Unban</button>
+                  </div>
                 </form>
                 <form method="post" action="{% url 'staff_moderation_resolve' r.id %}" class="d-flex flex-wrap gap-2">
                   {% csrf_token %}

@@ -1,0 +1,971 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-07 23:20+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\diploma_project\core\templates\core\base.html:8
+#: .\diploma_project\core\templates\core\base.html:23
+msgid "Fulfillment"
+msgstr "Fulfillment"
+
+#: .\diploma_project\core\templates\core\base.html:30
+#: .\diploma_project\core\templates\core\staff\base_staff.html:15
+#: .\diploma_project\core\templates\core\staff\dashboard.html:19
+#: .\diploma_project\core\templates\core\staff\dashboard.html:67
+msgid "Requests"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:32
+#: .\diploma_project\core\templates\core\dashboard.html:4
+#: .\diploma_project\core\templates\core\dashboard.html:8
+#: .\diploma_project\core\templates\core\staff\base_staff.html:11
+#: .\diploma_project\core\templates\core\staff\dashboard.html:4
+msgid "Dashboard"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:35
+msgid "My requests"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:43
+msgid "My offers"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:52
+#: .\diploma_project\core\templates\core\home.html:15
+msgid "New request"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:55
+msgid "Messages"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:59
+#: .\diploma_project\core\templates\core\staff\base_staff.html:4
+#: .\diploma_project\core\templates\core\staff\users.html:29
+msgid "Admin"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:77
+msgid "Language"
+msgstr "Language"
+
+#: .\diploma_project\core\templates\core\base.html:113
+msgid "Logout"
+msgstr "Logout"
+
+#: .\diploma_project\core\templates\core\base.html:115
+#: .\diploma_project\core\templates\core\login.html:4
+#: .\diploma_project\core\templates\core\login.html:28
+#: .\diploma_project\core\templates\core\register.html:116
+msgid "Login"
+msgstr "Login"
+
+#: .\diploma_project\core\templates\core\base.html:116
+#: .\diploma_project\core\templates\core\login.html:32
+msgid "Register"
+msgstr "Register"
+
+#: .\diploma_project\core\templates\core\base.html:135
+msgid "MVP"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:135
+msgid "Django templates"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:135
+msgid "Bootstrap 5"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\base.html:136
+msgid "Nova Poshta / Ukrposhta keys via environment variables"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:9
+msgid "Quick overview of your activity."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:19
+msgid "Requests you created"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:21
+#: .\diploma_project\core\templates\core\dashboard.html:54
+msgid "View all →"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:31
+msgid "Awaiting review"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:40
+msgid "You haven’t created any requests yet."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:52
+msgid "Proposals and send windows"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:64
+#: .\diploma_project\core\templates\core\dashboard.html:114
+msgid "Status"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:65
+msgid "Send by"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:66
+msgid "Code"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:71
+#: .\diploma_project\core\templates\core\request_detail.html:131
+msgid "Chat"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:74
+msgid "Fix & resubmit"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:79
+msgid "Withdraw"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:83
+msgid "Shipping slip + QR"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:84
+msgid "Upload proof"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:85
+msgid "Dispute"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:93
+msgid "No offers yet."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:106
+msgid "Issues you opened during send windows"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:113
+msgid "for"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:113
+msgid "code"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:114
+msgid "Created"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:117
+msgid "Admin note"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\dashboard.html:123
+msgid "No disputes opened."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:8
+#: .\diploma_project\core\templates\core\request_detail.html:181
+msgid "Edit request"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:9
+#, fuzzy
+#| msgid "Profile updated."
+msgid "Request"
+msgstr "Profile updated."
+
+#: .\diploma_project\core\templates\core\edit_request.html:11
+msgid "Back"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:16
+msgid "Please fix the errors below."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:26
+msgid "Title"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:32
+msgid "Description"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:39
+msgid "Category"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:44
+msgid "Total quantity"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:46
+#, fuzzy
+#| msgid "Fulfillment"
+msgid "Already fulfilled"
+msgstr "Fulfillment"
+
+#: .\diploma_project\core\templates\core\edit_request.html:56
+msgid "Save changes"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\edit_request.html:57
+msgid "Cancel"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\home.html:4
+msgid "Home"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\home.html:10
+msgid "Demand board"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\home.html:11
+msgid "Open requests"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\home.html:12
+msgid "Browse needs, contribute partial quantities, and coordinate delivery."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\login.html:11
+#, fuzzy
+#| msgid "Welcome back, %(username)s!"
+msgid "Welcome back"
+msgstr "Welcome back, %(username)s!"
+
+#: .\diploma_project\core\templates\core\login.html:12
+msgid "Sign in to contribute and message request owners."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\login.html:32
+msgid "No account?"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:12
+msgid "Create an account"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:13
+msgid "Join to post requests, contribute, and use the message center."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:53
+msgid "Preferred drop-off point"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:70
+#: .\diploma_project\core\templates\core\request_detail.html:92
+#: .\diploma_project\core\templates\core\request_detail.html:241
+msgid "City"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:74
+#: .\diploma_project\core\templates\core\request_detail.html:246
+msgid "Branch / parcel locker"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:75
+msgid "Select branch…"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:87
+#: .\diploma_project\core\templates\core\request_detail.html:96
+#: .\diploma_project\core\templates\core\request_detail.html:258
+msgid "Postcode"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:91
+#: .\diploma_project\core\templates\core\request_detail.html:262
+msgid "Find offices"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:96
+#: .\diploma_project\core\templates\core\request_detail.html:270
+msgid "Office line"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:112
+msgid "Create account"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\register.html:116
+msgid "Already registered?"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:12
+msgid "Owner"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:20
+msgid "Report this request"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:25
+msgid "Reason"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:27
+msgid "Select…"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:38
+msgid "Details (optional)"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:39
+msgid "Short explanation…"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:43
+msgid "Send report"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:53
+msgid "Closed by owner"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:59
+msgid "Staff warning"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:68
+#: .\diploma_project\core\templates\core\request_list_fragment.html:65
+msgid "Total"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:71
+#: .\diploma_project\core\templates\core\request_list_fragment.html:67
+msgid "Remaining"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:74
+msgid "Progress"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:86
+msgid "Delivery destination"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:100
+msgid "Notes"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:103
+msgid "No extra notes beyond manual coordination."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:111
+msgid "Awaiting your review"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:112
+msgid ""
+"Accept starts the send window; request changes sends the proposal back for "
+"edits."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:116
+msgid "Bulk action (optional note applied to all)"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:118
+msgid "Reason (optional)…"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:119
+msgid "Decline all proposals"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:127
+msgid "qty"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:136
+msgid "You requested changes"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:141
+msgid "Contributor Nova Poshta"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:144
+msgid "Contributor Ukrposhta"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:149
+msgid "Shipping plan"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:156
+msgid "Optional note (decline / request changes)"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:157
+msgid "Explain what should change…"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:159
+msgid "Accept"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:160
+#, fuzzy
+#| msgid "Profile updated."
+msgid "Request changes"
+msgstr "Profile updated."
+
+#: .\diploma_project\core\templates\core\request_detail.html:161
+msgid "Decline"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:165
+msgid "Waiting for the contributor to resubmit after your feedback."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:178
+msgid "Owner actions"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:179
+msgid "You can edit this request or close it if it’s no longer needed."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:187
+msgid "Close reason"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:187
+msgid "required because there are contributions/proposals"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:187
+msgid "optional"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:192
+msgid "Close request"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:200
+msgid "Propose a contribution"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:201
+msgid ""
+"Pick where you will drop off the parcel (post office for Ukraine). The "
+"request owner must accept before a send deadline and verification code apply."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:207
+msgid "Could not send proposal."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:220
+msgid "Quantity"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:232
+msgid "Your drop-off (carrier)"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:238
+msgid ""
+"Set NOVA_POSHTA_API_KEY to load cities and branches. You can still describe "
+"the branch after selecting if the API is offline."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:247
+msgid "Select warehouse…"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:267
+msgid "Configure Ukrposhta API env vars, or type the office line manually."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:277
+msgid "How will you ship?"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:284
+msgid "Send proposal"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:291
+msgid "This request is closed (fully fulfilled)."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:294
+msgid "Please"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:294
+msgid "log in"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_detail.html:294
+msgid "to contribute."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_list_fragment.html:17
+msgid "Warning"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_list_fragment.html:36
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "remaining"
+msgstr "Ukrainian"
+
+#: .\diploma_project\core\templates\core\request_list_fragment.html:53
+msgid "Details"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_list_fragment.html:55
+msgid "Open"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_list_fragment.html:62
+msgid "No description."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\request_list_fragment.html:66
+#, fuzzy
+#| msgid "Fulfillment"
+msgid "Fulfilled"
+msgstr "Fulfillment"
+
+#: .\diploma_project\core\templates\core\request_list_fragment.html:77
+msgid "No requests yet."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:4
+msgid "Staff"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:9
+msgid "Administration"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:12
+#: .\diploma_project\core\templates\core\staff\dashboard.html:11
+#: .\diploma_project\core\templates\core\staff\dashboard.html:69
+#: .\diploma_project\core\templates\core\staff\users.html:3
+#: .\diploma_project\core\templates\core\staff\users.html:5
+msgid "Users"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:13
+#: .\diploma_project\core\templates\core\staff\dashboard.html:64
+msgid "Verifications"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:14
+#: .\diploma_project\core\templates\core\staff\dashboard.html:65
+msgid "Moderation"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:16
+#: .\diploma_project\core\templates\core\staff\dashboard.html:27
+#: .\diploma_project\core\templates\core\staff\dashboard.html:68
+msgid "Contributions"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:17
+#: .\diploma_project\core\templates\core\staff\dashboard.html:66
+msgid "Disputes"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:21
+msgid "Django admin"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\base_staff.html:23
+msgid "Exit to site"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:6
+msgid "Operations overview"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:35
+msgid "Open disputes"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:37
+msgid "Open disputes →"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:44
+msgid "Verifications pending"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:46
+msgid "Review verifications →"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:53
+msgid "Moderation reports open"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:55
+msgid "Review reports →"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:62
+msgid "Quick links"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\dashboard.html:72
+msgid ""
+"Use the sidebar for day‑to‑day operations. Full model access remains in "
+"Django admin."
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:8
+msgid "Filters"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:10
+msgid "All"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:11
+msgid "Banned"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:12
+msgid "Restricted"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:13
+msgid "Verification pending"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:14
+msgid "Verification rejected"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:15
+msgid "Not verified"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:24
+msgid "Username"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:25
+msgid "Email"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:26
+msgid "Role"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:27
+msgid "Verification"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:28
+msgid "Moderation status"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:30
+msgid "Quick actions"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:42
+msgid "verified"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:44
+msgid "pending"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:46
+msgid "rejected"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:48
+msgid "not submitted"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:56
+msgid "banned"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:58
+msgid "restricted"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:59
+msgid "until"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:61
+msgid "ok"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:65
+msgid "User"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:67
+#, fuzzy
+#| msgid "Profile updated."
+msgid "Profile"
+msgstr "Profile updated."
+
+#: .\diploma_project\core\templates\core\staff\users.html:74
+msgid "Note…"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:80
+msgid "Temp restrict"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:81
+msgid "Ban"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:82
+msgid "Unban"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:86
+msgid "Make admin"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:87
+msgid "Delete this user?"
+msgstr ""
+
+#: .\diploma_project\core\templates\core\staff\users.html:87
+msgid "Delete user"
+msgstr ""
+
+#: .\diploma_project\core\views.py:202
+msgid ""
+"Your verification is pending review. You can post or contribute only after "
+"approval."
+msgstr ""
+
+#: .\diploma_project\core\views.py:207
+msgid ""
+"Upload verification documents in your Profile before posting or contributing."
+msgstr ""
+
+#: .\diploma_project\core\views.py:220
+msgid "Your account is banned from posting and contributing."
+msgstr "Your account is banned from posting and contributing."
+
+#: .\diploma_project\core\views.py:226
+#, python-format
+msgid "Your account is temporarily restricted until %(until)s (UTC)."
+msgstr "Your account is temporarily restricted until %(until)s (UTC)."
+
+#: .\diploma_project\core\views.py:274
+msgid "Account type changed. Please re-upload verification documents below."
+msgstr "Account type changed. Please re-upload verification documents below."
+
+#: .\diploma_project\core\views.py:277
+msgid "Profile updated."
+msgstr "Profile updated."
+
+#: .\diploma_project\core\views.py:304
+msgid "Verification documents submitted. Awaiting review."
+msgstr "Verification documents submitted. Awaiting review."
+
+#: .\diploma_project\core\views.py:336
+#, python-format
+msgid "Welcome back, %(username)s!"
+msgstr "Welcome back, %(username)s!"
+
+#: .\diploma_project\core\views.py:346
+msgid "You have been logged out."
+msgstr "You have been logged out."
+
+#: .\diploma_project\core\views.py:442
+msgid "Set your preferred drop-off point in Profile first."
+msgstr ""
+
+#: .\diploma_project\core\views.py:451
+msgid "Civil accounts cannot create military requests."
+msgstr ""
+
+#: .\diploma_project\core\views.py:484
+msgid "You must be verified to create military requests."
+msgstr ""
+
+#: .\diploma_project\core\views.py:641
+msgid "Enter a valid reason."
+msgstr ""
+
+#: .\diploma_project\core\views.py:648
+msgid ""
+"A reason is required when there are contributions/proposals on this request."
+msgstr ""
+
+#: .\diploma_project\core\views.py:658
+msgid "Request closed."
+msgstr ""
+
+#: .\diploma_project\core\views.py:675
+msgid "Closed requests cannot be edited."
+msgstr ""
+
+#: .\diploma_project\core\views.py:682
+#, fuzzy
+#| msgid "Profile updated."
+msgid "Request updated."
+msgstr "Profile updated."
+
+#: .\diploma_project\core\views_staff.py:75
+#: .\diploma_project\core\views_staff.py:159
+msgid "User has no profile."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:82
+msgid "You cannot change your own admin status here."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:91
+#, python-format
+msgid "User %(username)s promoted to admin."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:94
+msgid "You cannot delete yourself."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:97
+msgid "You cannot delete a superuser."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:101
+#, fuzzy, python-format
+#| msgid "Profile updated."
+msgid "User %(username)s deleted."
+msgstr "Profile updated."
+
+#: .\diploma_project\core\views_staff.py:128
+#: .\diploma_project\core\views_staff.py:182
+#: .\diploma_project\core\views_staff.py:393
+#: .\diploma_project\core\views_staff.py:433
+msgid "Unknown action."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:165
+msgid "Cannot approve without a passport scan."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:168
+msgid "Military verification requires a \"Резерв+\" PDF."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:322
+#, python-format
+msgid "User %(username)s permanently banned."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:326
+msgid "Unknown moderation action."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:352
+#, python-format
+msgid "Request #%(id)s hidden."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:359
+#, fuzzy, python-format
+#| msgid "Profile updated."
+msgid "Request #%(id)s restored."
+msgstr "Profile updated."
+
+#: .\diploma_project\core\views_staff.py:362
+msgid "Warning text is required."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:368
+#, python-format
+msgid "Warning added to request #%(id)s."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:374
+#, python-format
+msgid "Warning cleared for request #%(id)s."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:380
+msgid "Type \"delete\" in confirmation to delete the request."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:386
+msgid "Cannot delete a request that has contributions. Hide it instead."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:390
+#, fuzzy, python-format
+#| msgid "Profile updated."
+msgid "Request #%(id)s deleted."
+msgstr "Profile updated."
+
+#: .\diploma_project\core\views_staff.py:412
+msgid ""
+"Staff approve/reject applies only after the request owner has accepted the "
+"contribution (status must be “Accepted — send within deadline”)."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:423
+msgid "Cannot verify without an uploaded proof file."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:428
+msgid "Approve the contribution first, then verify after proof."
+msgstr ""
+
+#: .\diploma_project\core\views_staff.py:439
+#, python-format
+msgid "Contribution #%(id)s updated (%(status)s)."
+msgstr ""
+
+#: .\diploma_project\diploma_project\settings.py:141
+msgid "Ukrainian"
+msgstr "Ukrainian"
+
+#: .\diploma_project\diploma_project\settings.py:142
+msgid "English"
+msgstr "English"
+
+#: .\diploma_project\diploma_project\settings.py:143
+msgid "German"
+msgstr "German"
+
+#~ msgid "Fulfillment MVP"
+#~ msgstr "Fulfillment MVP"

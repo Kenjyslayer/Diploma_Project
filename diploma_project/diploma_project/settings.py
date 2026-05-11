@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,6 +48,9 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get("DEBUG", "1").strip().lower() in ("1", "true", "yes")
 
 ALLOWED_HOSTS = [h.strip() for h in (os.environ.get("ALLOWED_HOSTS", "") or "").split(",") if h.strip()]
+if DEBUG and not ALLOWED_HOSTS:
+    # Dev defaults (also needed for Django test client host "testserver").
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]
 
 
 # Application definition
@@ -58,6 +62,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # API + auth protocols
+    'rest_framework',
+    'drf_spectacular',
+    'oauth2_provider',
     'core.apps.CoreConfig',
 ]
 
@@ -65,12 +73,47 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'core.middleware.RateLimitMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.SecurityHeadersMiddleware',
 ]
+
+# Rate limiting rules (fixed window).
+# For production multi-instance deployments, set RATE_LIMIT_CACHE_ALIAS to a shared cache (e.g. Redis).
+RATE_LIMIT_RULES = {
+    # Anti-bruteforce
+    "POST /login/": {"window_seconds": 60, "max_requests": 10, "key_prefix": "login", "include_username": True},
+    # Token endpoints
+    "POST /o/token/": {"window_seconds": 60, "max_requests": 20, "key_prefix": "oauth_token"},
+    "POST /api/auth/jwt/token/": {"window_seconds": 60, "max_requests": 20, "key_prefix": "jwt_token"},
+    # Anti-spam
+    "POST /create/": {"window_seconds": 60, "max_requests": 6, "key_prefix": "create_request"},
+    "POST /requests/": {"window_seconds": 60, "max_requests": 30, "key_prefix": "requests_list"},
+    "POST /requests/*/report/": {"window_seconds": 60, "max_requests": 8, "key_prefix": "report_request"},
+}
+
+# OAuth2 provider settings (authorization server)
+OAUTH2_PROVIDER = {
+    "ACCESS_TOKEN_EXPIRE_SECONDS": 60 * 30,  # 30 min
+    "REFRESH_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 7,  # 7 days
+    "ROTATE_REFRESH_TOKEN": True,
+    # For demo/testing: keep client secrets usable in /o/token/ (admin UI may show hashed secrets otherwise).
+    # In production you can enable hashing, but then you must store the *plain* secret securely at creation time.
+    "HASH_CLIENT_SECRETS": False,
+    # For diploma demo: do not require PKCE on authorization code.
+    # (If you want stricter security later, enable PKCE and generate code_challenge in the client.)
+    "PKCE_REQUIRED": False,
+    "SCOPES": {
+        "read": "Read access",
+        "write": "Write access",
+        "staff": "Staff operations",
+    },
+}
 
 ROOT_URLCONF = 'diploma_project.urls'
 
@@ -91,6 +134,40 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'diploma_project.wsgi.application'
+
+
+# DRF / OpenAPI
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        # OAuth2 Bearer tokens (authorization server / integrations)
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+        # JWT for API access (alternative)
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        # Keep session auth for browsable API + local admin/dev
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Diploma Fulfillment API",
+    "DESCRIPTION": "REST API for the coordination system.",
+    "VERSION": "1.0.0",
+    # Avoid schema surprises from implicit auth; we will list schemes explicitly later.
+}
+
+# SimpleJWT
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": False,
+}
 
 
 # Database
@@ -130,11 +207,23 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uk'
+
+LANGUAGES = [
+    ("uk", _("Ukrainian")),
+    ("en", _("English")),
+    ("de", _("German")),
+]
+
+LOCALE_PATHS = [BASE_DIR / "locale"]
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+
+USE_L10N = True
+
+LANGUAGE_COOKIE_NAME = "django_language"
 
 USE_TZ = True
 
@@ -146,6 +235,9 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     }

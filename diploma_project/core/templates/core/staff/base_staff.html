@@ -1,26 +1,27 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}{% block staff_title %}Admin{% endblock %} · Staff{% endblock %}
+{% block title %}{% block staff_title %}{% trans "Admin" %}{% endblock %} · {% trans "Staff" %}{% endblock %}
 
 {% block content %}
 <div class="row g-0">
   <aside class="col-lg-2 staff-sidebar p-3 p-lg-4">
-    <div class="small text-uppercase text-white-50 fw-bold mb-3">Administration</div>
+    <div class="small text-uppercase text-white-50 fw-bold mb-3">{% trans "Administration" %}</div>
     <nav class="nav flex-column gap-1">
-      <a class="nav-link {% if staff_nav == 'dash' %}active{% endif %}" href="{% url 'staff_dashboard' %}"><i class="bi bi-grid-1x2 me-2"></i>Dashboard</a>
-      <a class="nav-link {% if staff_nav == 'users' %}active{% endif %}" href="{% url 'staff_users' %}"><i class="bi bi-people me-2"></i>Users</a>
-      <a class="nav-link {% if staff_nav == 'verifications' %}active{% endif %}" href="{% url 'staff_verifications' %}"><i class="bi bi-patch-check me-2"></i>Verifications</a>
-      <a class="nav-link {% if staff_nav == 'moderation' %}active{% endif %}" href="{% url 'staff_moderation' %}"><i class="bi bi-shield-exclamation me-2"></i>Moderation</a>
-      <a class="nav-link {% if staff_nav == 'requests' %}active{% endif %}" href="{% url 'staff_requests' %}"><i class="bi bi-inboxes me-2"></i>Requests</a>
-      <a class="nav-link {% if staff_nav == 'contributions' %}active{% endif %}" href="{% url 'staff_contributions' %}"><i class="bi bi-box-seam me-2"></i>Contributions</a>
-      <a class="nav-link {% if staff_nav == 'disputes' %}active{% endif %}" href="{% url 'staff_disputes' %}"><i class="bi bi-exclamation-octagon me-2"></i>Disputes</a>
+      <a class="nav-link {% if staff_nav == 'dash' %}active{% endif %}" href="{% url 'staff_dashboard' %}"><i class="bi bi-grid-1x2 me-2"></i>{% trans "Dashboard" %}</a>
+      <a class="nav-link {% if staff_nav == 'admins' %}active{% endif %}" href="{% url 'staff_admins' %}"><i class="bi bi-shield-lock me-2"></i>{% trans "Admins" %}</a>
+      <a class="nav-link {% if staff_nav == 'users' %}active{% endif %}" href="{% url 'staff_users' %}"><i class="bi bi-people me-2"></i>{% trans "Users" %}</a>
+      <a class="nav-link {% if staff_nav == 'verifications' %}active{% endif %}" href="{% url 'staff_verifications' %}"><i class="bi bi-patch-check me-2"></i>{% trans "Verifications" %}</a>
+      <a class="nav-link {% if staff_nav == 'moderation' %}active{% endif %}" href="{% url 'staff_moderation' %}"><i class="bi bi-shield-exclamation me-2"></i>{% trans "Moderation" %}</a>
+      <a class="nav-link {% if staff_nav == 'requests' %}active{% endif %}" href="{% url 'staff_requests' %}"><i class="bi bi-inboxes me-2"></i>{% trans "Requests" %}</a>
+      <a class="nav-link {% if staff_nav == 'contributions' %}active{% endif %}" href="{% url 'staff_contributions' %}"><i class="bi bi-box-seam me-2"></i>{% trans "Contributions" %}</a>
+      <a class="nav-link {% if staff_nav == 'disputes' %}active{% endif %}" href="{% url 'staff_disputes' %}"><i class="bi bi-exclamation-octagon me-2"></i>{% trans "Disputes" %}</a>
     </nav>
     <hr class="border-secondary">
     <a class="btn btn-outline-light btn-sm w-100 mb-2" href="/admin/" target="_blank" rel="noopener">
-      <i class="bi bi-wrench-adjustable me-1"></i> Django admin
+      <i class="bi bi-wrench-adjustable me-1"></i> {% trans "Django admin" %}
     </a>
-    <a class="btn btn-outline-secondary btn-sm w-100" href="{% url 'home' %}">Exit to site</a>
+    <a class="btn btn-outline-secondary btn-sm w-100" href="{% url 'home' %}">{% trans "Exit to site" %}</a>
   </aside>
   <div class="col-lg-10 p-4 p-lg-5 bg-white rounded-top-4 shadow-sm" style="min-height: calc(100vh - 56px);">
     {% block staff_content %}{% endblock %}

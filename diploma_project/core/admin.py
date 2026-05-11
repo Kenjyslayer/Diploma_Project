@@ -2,7 +2,16 @@ from django.contrib import admin
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from .models import Request, Profile, Contribution, Dispute, Conversation, Message, ModerationReport
+from .models import (
+    AuditLogEntry,
+    Contribution,
+    Conversation,
+    Dispute,
+    Message,
+    ModerationReport,
+    Profile,
+    Request,
+)
 
 
 @admin.register(Request)
@@ -147,3 +156,17 @@ class ConversationAdmin(admin.ModelAdmin):
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('id', 'conversation', 'sender', 'created_at')
     search_fields = ('body',)
+
+
+@admin.register(AuditLogEntry)
+class AuditLogEntryAdmin(admin.ModelAdmin):
+    list_display = ("created_at", "action", "actor", "target_user", "target_request", "target_contribution", "ip")
+    list_filter = ("action", "created_at")
+    search_fields = (
+        "action",
+        "actor__username",
+        "target_user__username",
+        "target_request__title",
+        "ip",
+    )
+    readonly_fields = ("created_at", "actor", "action", "target_user", "target_request", "target_contribution", "ip", "user_agent", "meta")

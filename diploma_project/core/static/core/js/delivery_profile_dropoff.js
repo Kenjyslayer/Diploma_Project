@@ -15,6 +15,7 @@
 
   const elNpCityRef = document.getElementById("id_pref_np_city_ref");
   const elNpWhRef = document.getElementById("id_pref_np_warehouse_ref");
+  const elNpCityLabel = document.getElementById("id_pref_np_city_label");
   const elNpLabel = document.getElementById("id_pref_np_label");
 
   const elUpPc = document.getElementById("id_pref_up_postcode");
@@ -55,6 +56,7 @@
     const kind = elKind ? elKind.value : "";
     if (kind === "nova_poshta") {
       const cityRef = (elNpCityRef && elNpCityRef.value) || "";
+      const cityLabel = (elNpCityLabel && elNpCityLabel.value) || "";
       const whRef = (elNpWhRef && elNpWhRef.value) || "";
       const label = (elNpLabel && elNpLabel.value) || "";
       if (whRef && label && npWhPick) {
@@ -70,8 +72,8 @@
         opt.selected = true;
         npWhPick.appendChild(opt);
       }
-      if (npCitySearch && !npCitySearch.value && cityRef) {
-        npCitySearch.value = "Selected city ref: " + cityRef;
+      if (npCitySearch && !npCitySearch.value && (cityLabel || cityRef)) {
+        npCitySearch.value = cityLabel || cityRef;
       }
     }
     if (kind === "ukrposhta") {
@@ -127,6 +129,7 @@
 
   async function selectCity(ref, label) {
     if (elNpCityRef) elNpCityRef.value = ref || "";
+    if (elNpCityLabel) elNpCityLabel.value = label || "";
     if (npCitySearch) npCitySearch.value = label || "";
     hideCitySuggestions();
     if (elNpWhRef) elNpWhRef.value = "";

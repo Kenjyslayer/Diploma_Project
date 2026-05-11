@@ -4,8 +4,15 @@
 
 {% block content %}
   <h2 class="mb-3">Open dispute</h2>
-  <div class="mb-3 text-muted">
-    Contribution to <strong>{{ contribution.request.title }}</strong> ({{ contribution.quantity }}) • Code: {{ contribution.verification_code }}
+  <div class="alert alert-light border small">
+    <div class="fw-semibold mb-1">What is a dispute?</div>
+    Use disputes when something goes wrong <strong>after the owner accepted your offer</strong> and the contribution is in the active <strong>send window</strong> (status “pending”).
+    Examples: the post office refuses the shipment, the QR/slip can’t be used, wrong drop-off details, or you need staff help to unblock the workflow.
+  </div>
+
+  <div class="mb-3 text-muted small">
+    Contribution to <strong>{{ contribution.request.title }}</strong> (qty {{ contribution.quantity }})
+    {% if contribution.expires_at %}· send by <strong>{{ contribution.expires_at|date:"Y-m-d H:i" }} UTC</strong>{% endif %}
   </div>
 
   <form method="post" class="card card-body">

@@ -9,9 +9,11 @@ from datetime import timedelta
 
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from django.utils.translation import gettext as _
 from .forms import (
     RegisterForm,
     RequestForm,
+    RequestEditForm,
     ContributionProposeForm,
     ProofUploadForm,
     DisputeForm,
@@ -26,6 +28,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Request, Contribution, Dispute, Conversation, Message
 from .services import expire_pending_contributions_for_request
 from .shipping.handoff_slip import build_qr_payload, qr_png_data_uri
+from .audit import log_audit
 
 
 def _can_view_military_request(http_request, req: Request) -> bool:
@@ -180,9 +183,13 @@ def register(request):
 
 
 def _needs_verification_submission(u) -> bool:
+    if getattr(u, "is_staff", False) or getattr(u, "is_superuser", False):
+        return False
     p = getattr(u, 'profile', None)
     if not p:
         return True
+    if getattr(p, "role", "") == "admin":
+        return False
     # Only VERIFIED users may post/contribute. Pending review is not enough.
     return p.verification_status != p.VERIFICATION_VERIFIED
 
@@ -191,9 +198,15 @@ def _require_verification_submission_or_redirect(request):
     if _needs_verification_submission(request.user):
         p = getattr(request.user, "profile", None)
         if p and p.verification_status == p.VERIFICATION_PENDING:
-            messages.error(request, 'Your verification is pending review. You can post or contribute only after approval.')
+            messages.error(
+                request,
+                _("Your verification is pending review. You can post or contribute only after approval."),
+            )
         else:
-            messages.error(request, 'Upload verification documents in your Profile before posting or contributing.')
+            messages.error(
+                request,
+                _("Upload verification documents in your Profile before posting or contributing."),
+            )
         return redirect('profile')
     return None
 
@@ -205,13 +218,14 @@ def _require_not_restricted_or_redirect(request):
     p = getattr(u, "profile", None)
     banned_at = getattr(p, "banned_at", None) if p else None
     if banned_at:
-        messages.error(request, "Your account is banned from posting and contributing.")
+        messages.error(request, _("Your account is banned from posting and contributing."))
         return redirect("profile")
     until = getattr(p, "restricted_until", None) if p else None
     if until and until > timezone.now():
         messages.error(
             request,
-            f'Your account is temporarily restricted until {until.strftime("%Y-%m-%d %H:%M")} (UTC).',
+            _("Your account is temporarily restricted until %(until)s (UTC).")
+            % {"until": until.strftime("%Y-%m-%d %H:%M")},
         )
         return redirect("profile")
     return None
@@ -240,23 +254,35 @@ def profile(request):
         'preferred_dropoff_kind': profile.preferred_dropoff_kind or Request.DELIVERY_KIND_NOVA,
         'preferred_np_city_ref': profile.preferred_np_city_ref,
         'preferred_np_warehouse_ref': profile.preferred_np_warehouse_ref,
+        'preferred_np_city_label': profile.preferred_np_city_label,
         'preferred_np_label': profile.preferred_np_label,
         'preferred_up_postcode': profile.preferred_up_postcode,
         'preferred_up_office_id': profile.preferred_up_office_id,
         'preferred_up_label': profile.preferred_up_label,
+        'profile_photo_public': profile.profile_photo_public,
     }
     settings_form = ProfileSettingsForm(initial=settings_initial, user=request.user)
 
     if request.method == 'POST' and action == 'settings':
-        settings_form = ProfileSettingsForm(request.POST, user=request.user)
+        settings_form = ProfileSettingsForm(request.POST, request.FILES, user=request.user)
         if settings_form.is_valid():
             old_role = profile.role
             new_role = settings_form.cleaned_data.get('role', old_role)
             settings_form.save()
             if old_role != new_role:
-                messages.warning(request, 'Account type changed. Please re-upload verification documents below.')
+                log_audit(
+                    request=request,
+                    actor=request.user,
+                    action="profile.role_change",
+                    target_user=request.user,
+                    meta={"old_role": old_role, "new_role": new_role},
+                )
+                messages.warning(
+                    request,
+                    _("Account type changed. Please re-upload verification documents below."),
+                )
             else:
-                messages.success(request, 'Profile updated.')
+                messages.success(request, _("Profile updated."))
             return redirect('profile')
 
     if request.method == 'POST' and action == 'verify':
@@ -283,7 +309,14 @@ def profile(request):
                         'is_verified',
                     ]
                 )
-                messages.success(request, 'Verification documents submitted. Awaiting review.')
+                log_audit(
+                    request=request,
+                    actor=request.user,
+                    action="verification.submit_docs",
+                    target_user=request.user,
+                    meta={"role": profile.role},
+                )
+                messages.success(request, _("Verification documents submitted. Awaiting review."))
                 return redirect('dashboard')
 
     ctx = {
@@ -315,6 +348,8 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            log_audit(request=request, actor=user, action="auth.login", target_user=user)
+            messages.success(request, _("Welcome back, %(username)s!") % {"username": user.username})
             return redirect('/')
     else:
         form = LoginForm()
@@ -323,7 +358,10 @@ def user_login(request):
 
 
 def user_logout(request):
+    if request.user.is_authenticated:
+        log_audit(request=request, actor=request.user, action="auth.logout", target_user=request.user)
     logout(request)
+    messages.success(request, _("You have been logged out."))
     return redirect('/')
 
 
@@ -350,6 +388,7 @@ def _initial_request_delivery_from_profile(profile) -> dict:
         'delivery_kind': kind,
         'delivery_location': '',
         'np_city_ref': '',
+        'np_city_label': '',
         'np_warehouse_ref': '',
         'np_label': '',
         'up_postcode': '',
@@ -360,6 +399,7 @@ def _initial_request_delivery_from_profile(profile) -> dict:
         initial.update(
             {
                 'np_city_ref': getattr(profile, 'preferred_np_city_ref', '') or '',
+                'np_city_label': getattr(profile, 'preferred_np_city_label', '') or '',
                 'np_warehouse_ref': getattr(profile, 'preferred_np_warehouse_ref', '') or '',
                 'np_label': getattr(profile, 'preferred_np_label', '') or '',
             }
@@ -391,6 +431,7 @@ def _assign_request_delivery_from_profile(req: Request, profile) -> None:
     req.delivery_kind = initial.get("delivery_kind") or Request.DELIVERY_KIND_MANUAL
     req.delivery_location = initial.get("delivery_location") or ""
     req.np_city_ref = initial.get("np_city_ref") or ""
+    req.np_city_label = initial.get("np_city_label") or ""
     req.np_warehouse_ref = initial.get("np_warehouse_ref") or ""
     req.np_label = initial.get("np_label") or ""
     req.up_postcode = initial.get("up_postcode") or ""
@@ -416,7 +457,7 @@ def create_request(request):
             try:
                 _assign_request_delivery_from_profile(req, profile)
             except ValidationError as e:
-                messages.error(request, 'Set your preferred drop-off point in Profile first.')
+                messages.error(request, _("Set your preferred drop-off point in Profile first."))
                 for field, errs in getattr(e, 'message_dict', {}).items():
                     if field in form.fields:
                         form.add_error(field, errs)
@@ -425,7 +466,7 @@ def create_request(request):
                 return render(request, 'core/create_request.html', _create_request_context(form))
             # Civil users cannot create military requests (even if they pick the category).
             if profile and profile.role == 'civil' and req.category == 'military':
-                messages.error(request, 'Civil accounts cannot create military requests.')
+                messages.error(request, _("Civil accounts cannot create military requests."))
                 try:
                     from .moderation import maybe_report_suspicious_civil_request_submission
 
@@ -458,7 +499,7 @@ def create_request(request):
                 )
             # Military requests can only be created by verified users.
             if req.category == 'military' and not (profile and profile.is_verified):
-                messages.error(request, 'You must be verified to create military requests.')
+                messages.error(request, _("You must be verified to create military requests."))
                 return render(request, 'core/create_request.html', _create_request_context(form))
             try:
                 req.full_clean()
@@ -496,6 +537,14 @@ def create_request(request):
                         "attempts_left": max(0, 3 - attempts),
                     }
                 return render(request, 'core/create_request.html', _create_request_context(form, extra))
+            log_audit(
+                request=request,
+                actor=request.user,
+                action="request.create",
+                target_user=request.user,
+                target_request=req,
+                meta={"category": req.category},
+            )
             return redirect('/requests/')
         else:
             # If the user is repeatedly attempting to submit suspicious content, still report it
@@ -615,12 +664,15 @@ def close_request(request, request_id: int):
         raise PermissionDenied
     form = RequestCloseForm(request.POST)
     if not form.is_valid():
-        messages.error(request, 'Enter a valid reason.')
+        messages.error(request, _("Enter a valid reason."))
         return redirect('request_detail', request_id=req.id)
     reason = (form.cleaned_data.get('reason') or '').strip()
     has_any = req.contributions.exists()
     if has_any and not reason:
-        messages.error(request, 'A reason is required when there are contributions/proposals on this request.')
+        messages.error(
+            request,
+            _("A reason is required when there are contributions/proposals on this request."),
+        )
         return redirect('request_detail', request_id=req.id)
     req.status = Request.STATUS_CLOSED
     req.closed_at = timezone.now()
@@ -629,8 +681,36 @@ def close_request(request, request_id: int):
     # Notify existing conversations.
     for conv in Conversation.objects.filter(resource_request=req):
         _post_system_message(conv, f"Request was closed by owner. Reason: {reason or '—'}")
-    messages.success(request, 'Request closed.')
+    messages.success(request, _("Request closed."))
     return redirect('request_detail', request_id=req.id)
+
+
+@login_required
+def edit_request(request, request_id: int):
+    restricted = _require_not_restricted_or_redirect(request)
+    if restricted:
+        return restricted
+    gate = _require_verification_submission_or_redirect(request)
+    if gate:
+        return gate
+
+    req = get_object_or_404(Request, id=request_id)
+    if not (req.created_by_id == request.user.id or request.user.is_staff or request.user.is_superuser):
+        raise PermissionDenied
+    if req.status == Request.STATUS_CLOSED:
+        messages.error(request, _("Closed requests cannot be edited."))
+        return redirect('request_detail', request_id=req.id)
+
+    if request.method == 'POST':
+        form = RequestEditForm(request.POST, instance=req)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("Request updated."))
+            return redirect('request_detail', request_id=req.id)
+    else:
+        form = RequestEditForm(instance=req)
+
+    return render(request, 'core/edit_request.html', {'req': req, 'form': form})
 
 
 # 🔥 ОСНОВНА ЛОГІКА
@@ -782,9 +862,8 @@ def contribution_owner_action(request, contribution_id):
             messages.success(
                 request,
                 format_html(
-                    'Contribution accepted. Contributor send-by: {} UTC · verification code {}.',
+                    'Contribution accepted. Contributor send-by: {} UTC. Open the shipping slip to see the verification code.',
                     contribution.expires_at.strftime('%Y-%m-%d %H:%M'),
-                    contribution.verification_code,
                 ),
             )
         except ValidationError as e:
@@ -1059,6 +1138,14 @@ def report_request(request, request_id: int):
         snapshot_category=(req.category or ""),
         reason=reason_text[:255],
         score=80,
+    )
+    log_audit(
+        request=request,
+        actor=request.user,
+        action="request.report",
+        target_user=req.created_by,
+        target_request=req,
+        meta={"reason_code": reason_code},
     )
     messages.success(request, "Reported. Staff will review this request.")
     return redirect("request_detail", request_id=req.id)

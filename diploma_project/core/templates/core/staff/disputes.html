@@ -2,6 +2,11 @@
 {% block staff_title %}Disputes{% endblock %}
 {% block staff_content %}
   <h1 class="h3 mb-4">Disputes</h1>
+  <div class="alert alert-light border small">
+    <div class="fw-semibold mb-1">Purpose</div>
+    Disputes are opened by contributors during the active <strong>send window</strong> (contribution status “pending”) when they need staff help:
+    wrong carrier/drop-off details, post office refused the shipment, issues with the shipping slip/QR, or any workflow blocker after owner acceptance.
+  </div>
   {% for d in disputes %}
     <div class="card mb-3 border-0 shadow-sm">
       <div class="card-body">

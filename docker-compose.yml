@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: diploma
+      POSTGRES_USER: diploma
+      POSTGRES_PASSWORD: diploma
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U diploma -d diploma"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+      start_period: 5s
+
+  coordination:
+    build: .
+    environment:
+      DEBUG: "1"
+      DATABASE_URL: "postgres://diploma:diploma@db:5432/diploma"
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    command: >
+      bash -lc "python diploma_project/manage.py migrate &&
+      gunicorn diploma_project.wsgi_coordination:application --chdir diploma_project --bind 0.0.0.0:8000"
+
+  auth:
+    build: .
+    environment:
+      DEBUG: "1"
+      DATABASE_URL: "postgres://diploma:diploma@db:5432/diploma"
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8001:8000"
+    command: >
+      bash -lc "python diploma_project/manage.py migrate &&
+      gunicorn diploma_project.wsgi_auth:application --chdir diploma_project --bind 0.0.0.0:8000"
+
+volumes:
+  pgdata:
+

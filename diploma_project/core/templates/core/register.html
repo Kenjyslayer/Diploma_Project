@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 {% load static %}
 
 {% block title %}Register{% endblock %}
@@ -8,8 +9,8 @@
     <div class="col-md-6 col-lg-5">
       <div class="page-hero p-4 mb-4 text-center">
         <i class="bi bi-person-plus display-6 text-primary"></i>
-        <h1 class="h4 mt-2 mb-1">Create an account</h1>
-        <p class="text-muted small mb-0">Join to post requests, contribute, and use the message center.</p>
+        <h1 class="h4 mt-2 mb-1">{% trans "Create an account" %}</h1>
+        <p class="text-muted small mb-0">{% trans "Join to post requests, contribute, and use the message center." %}</p>
       </div>
       <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
@@ -49,7 +50,7 @@
             </div>
 
             <hr class="my-3">
-            <h2 class="h6 mb-2">Preferred drop-off point</h2>
+            <h2 class="h6 mb-2">{% trans "Preferred drop-off point" %}</h2>
 
             <div id="profile-dropoff-root"
                  data-api-nova-cities="{% url 'api_public_nova_cities' %}"
@@ -66,15 +67,16 @@
                 <div class="alert alert-info py-2 small" id="pref-np-api-hint" style="display:none;">
                   Nova Poshta API key is missing. Offline demo cities are available.
                 </div>
-                <label class="form-label fw-semibold small">City</label>
+                <label class="form-label fw-semibold small">{% trans "City" %}</label>
                 <input type="search" class="form-control" id="pref-np-city-search" placeholder="Kyiv, Lviv…" autocomplete="off" aria-controls="pref-np-city-results">
                 <div id="pref-np-city-results" class="list-group mt-1 shadow-sm position-relative" style="max-height:220px;overflow-y:auto;display:none;z-index:5;"></div>
                 <div class="mt-2">
-                  <label class="form-label fw-semibold small">Branch / parcel locker</label>
-                  <select class="form-select" id="pref-np-wh-pick"><option value="">Select branch…</option></select>
+                  <label class="form-label fw-semibold small">{% trans "Branch / parcel locker" %}</label>
+                  <select class="form-select" id="pref-np-wh-pick"><option value="">{% trans "Select branch…" %}</option></select>
                 </div>
                 {{ form.preferred_np_city_ref }}
                 {{ form.preferred_np_warehouse_ref }}
+                {{ form.preferred_np_city_label }}
                 {{ form.preferred_np_label }}
                 {% if form.preferred_np_label.errors %}<div class="text-danger small">{{ form.preferred_np_label.errors }}</div>{% endif %}
               </div>
@@ -82,16 +84,16 @@
               <div id="pref-panel-ukrposhta" style="display:none;" class="mb-3">
                 <div class="row g-2 align-items-end mb-2">
                   <div class="col-md-5">
-                    <label class="form-label fw-semibold small">Postcode</label>
+                    <label class="form-label fw-semibold small">{% trans "Postcode" %}</label>
                     {{ form.preferred_up_postcode }}
                   </div>
                   <div class="col-md-4">
-                    <button type="button" class="btn btn-outline-primary" id="pref-btn-up-search">Find offices</button>
+                    <button type="button" class="btn btn-outline-primary" id="pref-btn-up-search">{% trans "Find offices" %}</button>
                   </div>
                 </div>
                 <div id="pref-up-results" class="mb-2 small"></div>
                 {{ form.preferred_up_office_id }}
-                <label class="form-label fw-semibold small">Office line</label>
+                <label class="form-label fw-semibold small">{% trans "Office line" %}</label>
                 {{ form.preferred_up_label }}
                 {% if form.preferred_up_label.errors %}<div class="text-danger small">{{ form.preferred_up_label.errors }}</div>{% endif %}
               </div>
@@ -107,11 +109,11 @@
                 {{ form.password2 }}{% if form.password2.errors %}<div class="text-danger small">{{ form.password2.errors }}</div>{% endif %}
               </div>
             </div>
-            <button class="btn btn-primary w-100 py-2" type="submit"><i class="bi bi-check2-circle me-2"></i>Create account</button>
+            <button class="btn btn-primary w-100 py-2" type="submit"><i class="bi bi-check2-circle me-2"></i>{% trans "Create account" %}</button>
           </form>
         </div>
       </div>
-      <p class="text-center text-muted small mt-3">Already registered? <a href="{% url 'login' %}">Login</a></p>
+      <p class="text-center text-muted small mt-3">{% trans "Already registered?" %} <a href="{% url 'login' %}">{% trans "Login" %}</a></p>
     </div>
   </div>
 {% endblock %}

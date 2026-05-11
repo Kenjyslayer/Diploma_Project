@@ -1,17 +1,18 @@
 {% extends 'core/staff/base_staff.html' %}
-{% block staff_title %}Users{% endblock %}
+{% load i18n %}
+{% block staff_title %}{% trans "Users" %}{% endblock %}
 {% block staff_content %}
-  <h1 class="h3 mb-4">Users</h1>
+  <h1 class="h3 mb-4">{% trans "Users" %}</h1>
   <div class="card border-0 shadow-sm mb-3">
     <div class="card-body">
-      <div class="fw-semibold mb-2">Filters</div>
+      <div class="fw-semibold mb-2">{% trans "Filters" %}</div>
       <div class="d-flex flex-wrap gap-2">
-        <a class="btn btn-sm {% if not filter %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}">All</a>
-        <a class="btn btn-sm {% if filter == 'banned' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=banned">Banned</a>
-        <a class="btn btn-sm {% if filter == 'restricted' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=restricted">Restricted</a>
-        <a class="btn btn-sm {% if filter == 'verif_pending' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=verif_pending">Verification pending</a>
-        <a class="btn btn-sm {% if filter == 'verif_rejected' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=verif_rejected">Verification rejected</a>
-        <a class="btn btn-sm {% if filter == 'unverified' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=unverified">Not verified</a>
+        <a class="btn btn-sm {% if not filter %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}">{% trans "All" %}</a>
+        <a class="btn btn-sm {% if filter == 'banned' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=banned">{% trans "Banned" %}</a>
+        <a class="btn btn-sm {% if filter == 'restricted' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=restricted">{% trans "Restricted" %}</a>
+        <a class="btn btn-sm {% if filter == 'verif_pending' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=verif_pending">{% trans "Verification pending" %}</a>
+        <a class="btn btn-sm {% if filter == 'verif_rejected' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=verif_rejected">{% trans "Verification rejected" %}</a>
+        <a class="btn btn-sm {% if filter == 'unverified' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'staff_users' %}?filter=unverified">{% trans "Not verified" %}</a>
       </div>
     </div>
   </div>
@@ -20,13 +21,13 @@
     <table class="table table-hover align-middle mb-0">
       <thead class="table-light">
         <tr>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Verification</th>
-          <th>Moderation status</th>
-          <th>Admin</th>
-          <th>Quick actions</th>
+          <th>{% trans "Username" %}</th>
+          <th>{% trans "Email" %}</th>
+          <th>{% trans "Role" %}</th>
+          <th>{% trans "Verification" %}</th>
+          <th>{% trans "Moderation status" %}</th>
+          <th>{% trans "Admin" %}</th>
+          <th>{% trans "Quick actions" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -38,13 +39,13 @@
             <td>
               {% if u.profile %}
                 {% if u.profile.verification_status == 'verified' %}
-                  <span class="badge text-bg-success">verified</span>
+                  <span class="badge text-bg-success">{% trans "verified" %}</span>
                 {% elif u.profile.verification_status == 'pending' %}
-                  <span class="badge text-bg-warning">pending</span>
+                  <span class="badge text-bg-warning">{% trans "pending" %}</span>
                 {% elif u.profile.verification_status == 'rejected' %}
-                  <span class="badge text-bg-danger">rejected</span>
+                  <span class="badge text-bg-danger">{% trans "rejected" %}</span>
                 {% else %}
-                  <span class="badge text-bg-secondary">not submitted</span>
+                  <span class="badge text-bg-secondary">{% trans "not submitted" %}</span>
                 {% endif %}
               {% else %}
                 —
@@ -52,33 +53,38 @@
             </td>
             <td>
               {% if u.profile and u.profile.banned_at %}
-                <span class="badge text-bg-danger">banned</span>
+                <span class="badge text-bg-danger">{% trans "banned" %}</span>
               {% elif u.profile and u.profile.restricted_until and u.profile.restricted_until > now %}
-                <span class="badge text-bg-warning">restricted</span>
-                <div class="small text-muted">until {{ u.profile.restricted_until|date:"Y-m-d H:i" }} UTC</div>
+                <span class="badge text-bg-warning">{% trans "restricted" %}</span>
+                <div class="small text-muted">{% trans "until" %} {{ u.profile.restricted_until|date:"Y-m-d H:i" }} UTC</div>
               {% else %}
-                <span class="badge text-bg-success">ok</span>
+                <span class="badge text-bg-success">{% trans "ok" %}</span>
               {% endif %}
             </td>
             <td>
-              <a class="btn btn-sm btn-outline-secondary" href="/admin/auth/user/{{ u.id }}/change/" target="_blank" rel="noopener">User</a>
+              <a class="btn btn-sm btn-outline-secondary" href="/admin/auth/user/{{ u.id }}/change/" target="_blank" rel="noopener">{% trans "User" %}</a>
               {% if u.profile %}
-                <a class="btn btn-sm btn-outline-secondary" href="/admin/core/profile/{{ u.profile.id }}/change/" target="_blank" rel="noopener">Profile</a>
+                <a class="btn btn-sm btn-outline-secondary" href="/admin/core/profile/{{ u.profile.id }}/change/" target="_blank" rel="noopener">{% trans "Profile" %}</a>
               {% endif %}
             </td>
             <td style="min-width: 420px;">
               {% if u.profile %}
-                <form method="post" action="{% url 'staff_user_action' u.id %}" class="d-flex flex-wrap gap-2">
+                <form method="post" action="{% url 'staff_user_action' u.id %}" class="d-flex flex-wrap gap-2 mb-2">
                   {% csrf_token %}
-                  <input class="form-control form-control-sm" name="note" placeholder="Note…" style="max-width: 200px;">
+                  <input class="form-control form-control-sm" name="note" placeholder="{% trans "Note…" %}" style="max-width: 200px;">
                   <select class="form-select form-select-sm" name="hours" style="max-width: 90px;">
                     <option value="1">1h</option>
                     <option value="24" selected>24h</option>
                     <option value="168">7d</option>
                   </select>
-                  <button class="btn btn-sm btn-outline-warning" type="submit" name="action" value="restrict_temp">Temp restrict</button>
-                  <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="ban_permanent">Ban</button>
-                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="unrestrict">Unban</button>
+                  <button class="btn btn-sm btn-outline-warning" type="submit" name="action" value="restrict_temp">{% trans "Temp restrict" %}</button>
+                  <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="ban_permanent">{% trans "Ban" %}</button>
+                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="unrestrict">{% trans "Unban" %}</button>
+                </form>
+                <form method="post" action="{% url 'staff_user_action' u.id %}" class="d-flex flex-wrap gap-2">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-outline-primary" type="submit" name="action" value="make_admin">{% trans "Make admin" %}</button>
+                  <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="delete_user" onclick="return confirm('{% trans "Delete this user?" %}')">{% trans "Delete user" %}</button>
                 </form>
               {% else %}
                 <span class="text-muted">—</span>

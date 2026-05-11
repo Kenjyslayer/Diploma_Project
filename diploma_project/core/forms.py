@@ -43,6 +43,10 @@ class RegisterForm(UserCreationForm):
         required=False,
         widget=forms.HiddenInput(attrs={"id": "id_pref_np_city_ref"}),
     )
+    preferred_np_city_label = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_pref_np_city_label"}),
+    )
     preferred_np_warehouse_ref = forms.CharField(
         required=False,
         widget=forms.HiddenInput(attrs={"id": "id_pref_np_warehouse_ref"}),
@@ -90,6 +94,7 @@ class RegisterForm(UserCreationForm):
                 profile.preferred_dropoff_kind = self.cleaned_data.get('preferred_dropoff_kind', '')
                 profile.preferred_np_city_ref = self.cleaned_data.get('preferred_np_city_ref', '')
                 profile.preferred_np_warehouse_ref = self.cleaned_data.get('preferred_np_warehouse_ref', '')
+                profile.preferred_np_city_label = self.cleaned_data.get('preferred_np_city_label', '')
                 profile.preferred_np_label = self.cleaned_data.get('preferred_np_label', '')
                 profile.preferred_up_postcode = self.cleaned_data.get('preferred_up_postcode', '')
                 profile.preferred_up_office_id = self.cleaned_data.get('preferred_up_office_id', '')
@@ -107,6 +112,7 @@ class RegisterForm(UserCreationForm):
                         'preferred_dropoff_kind',
                         'preferred_np_city_ref',
                         'preferred_np_warehouse_ref',
+                        'preferred_np_city_label',
                         'preferred_np_label',
                         'preferred_up_postcode',
                         'preferred_up_office_id',
@@ -122,6 +128,7 @@ class RegisterForm(UserCreationForm):
             cleaned['preferred_up_postcode'] = ''
             cleaned['preferred_up_office_id'] = ''
             cleaned['preferred_up_label'] = ''
+            # Keep city label only for NP.
             if not (
                 cleaned.get('preferred_np_city_ref')
                 and cleaned.get('preferred_np_warehouse_ref')
@@ -131,6 +138,7 @@ class RegisterForm(UserCreationForm):
         elif kind == Request.DELIVERY_KIND_UKR:
             cleaned['preferred_np_city_ref'] = ''
             cleaned['preferred_np_warehouse_ref'] = ''
+            cleaned['preferred_np_city_label'] = ''
             cleaned['preferred_np_label'] = ''
             if not (cleaned.get('preferred_up_postcode') and cleaned.get('preferred_up_label')):
                 self.add_error('preferred_up_label', 'Enter postcode and select or describe an Ukrposhta office.')
@@ -175,6 +183,8 @@ class ProfileSettingsForm(forms.Form):
         choices=[("civil", "Civil"), ("military", "Military")],
         widget=forms.Select(attrs={"class": "form-select"}),
     )
+    profile_photo = forms.ImageField(required=False)
+    profile_photo_public = forms.BooleanField(required=False, initial=True)
 
     preferred_dropoff_kind = forms.ChoiceField(
         label="Preferred drop-off (carrier)",
@@ -187,6 +197,9 @@ class ProfileSettingsForm(forms.Form):
     preferred_np_city_ref = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id": "id_pref_np_city_ref"}))
     preferred_np_warehouse_ref = forms.CharField(
         required=False, widget=forms.HiddenInput(attrs={"id": "id_pref_np_warehouse_ref"})
+    )
+    preferred_np_city_label = forms.CharField(
+        required=False, widget=forms.HiddenInput(attrs={"id": "id_pref_np_city_label"})
     )
     preferred_np_label = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id": "id_pref_np_label"}))
     preferred_up_postcode = forms.CharField(
@@ -221,6 +234,7 @@ class ProfileSettingsForm(forms.Form):
         elif kind == Request.DELIVERY_KIND_UKR:
             cleaned['preferred_np_city_ref'] = ''
             cleaned['preferred_np_warehouse_ref'] = ''
+            cleaned['preferred_np_city_label'] = ''
             cleaned['preferred_np_label'] = ''
             if not (cleaned.get('preferred_up_postcode') and cleaned.get('preferred_up_label')):
                 self.add_error('preferred_up_label', 'Enter postcode and select or describe an Ukrposhta office.')
@@ -246,6 +260,7 @@ class ProfileSettingsForm(forms.Form):
         p.preferred_dropoff_kind = self.cleaned_data.get('preferred_dropoff_kind', '')
         p.preferred_np_city_ref = self.cleaned_data.get('preferred_np_city_ref', '')
         p.preferred_np_warehouse_ref = self.cleaned_data.get('preferred_np_warehouse_ref', '')
+        p.preferred_np_city_label = self.cleaned_data.get('preferred_np_city_label', '')
         p.preferred_np_label = self.cleaned_data.get('preferred_np_label', '')
         p.preferred_up_postcode = self.cleaned_data.get('preferred_up_postcode', '')
         p.preferred_up_office_id = self.cleaned_data.get('preferred_up_office_id', '')
@@ -254,6 +269,11 @@ class ProfileSettingsForm(forms.Form):
             p.preferred_dropoff_point = p.preferred_np_label
         elif p.preferred_dropoff_kind == Request.DELIVERY_KIND_UKR:
             p.preferred_dropoff_point = p.preferred_up_label
+
+        photo = self.cleaned_data.get("profile_photo")
+        if photo:
+            p.profile_photo = photo
+        p.profile_photo_public = bool(self.cleaned_data.get("profile_photo_public"))
         # Changing account type forces re-verification.
         if old_role != new_role:
             p.is_verified = False
@@ -279,6 +299,18 @@ class RequestForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'form-select'}),
             'total_quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }
+
+
+class RequestEditForm(RequestForm):
+    def clean_total_quantity(self):
+        total = self.cleaned_data.get("total_quantity")
+        inst = getattr(self, "instance", None)
+        fulfilled = getattr(inst, "fulfilled_quantity", 0) if inst else 0
+        if total is not None and fulfilled and total < fulfilled:
+            raise forms.ValidationError(
+                f"Total quantity cannot be less than already fulfilled ({fulfilled})."
+            )
+        return total
 
 
 class ContributionQuantityForm(forms.Form):

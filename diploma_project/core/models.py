@@ -53,6 +53,7 @@ class Request(models.Model):
     )
 
     np_city_ref = models.CharField(max_length=64, blank=True)
+    np_city_label = models.CharField(max_length=255, blank=True)
     np_warehouse_ref = models.CharField(max_length=64, blank=True)
     np_label = models.TextField(blank=True, help_text='Snapshot of selected NP warehouse for display.')
 
@@ -404,6 +405,56 @@ class Message(models.Model):
         return f'Message {self.id}'
 
 
+class AuditLogEntry(models.Model):
+    """Minimal audit log for security-relevant actions."""
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="audit_events",
+    )
+    action = models.CharField(max_length=64)
+
+    target_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="audit_events_as_target",
+    )
+    target_request = models.ForeignKey(
+        Request,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="audit_events",
+    )
+    target_contribution = models.ForeignKey(
+        Contribution,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="audit_events",
+    )
+
+    ip = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(blank=True)
+    meta = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["action"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.created_at:%Y-%m-%d %H:%M:%S} {self.action}"
+
+
 class ModerationReport(models.Model):
     """A lightweight moderation queue entry (AI-assisted / rule-based)."""
 
@@ -507,6 +558,7 @@ class Profile(models.Model):
     )
     preferred_np_city_ref = models.CharField(max_length=64, blank=True)
     preferred_np_warehouse_ref = models.CharField(max_length=64, blank=True)
+    preferred_np_city_label = models.CharField(max_length=255, blank=True)
     preferred_np_label = models.TextField(blank=True)
 
     preferred_up_postcode = models.CharField(max_length=12, blank=True)
@@ -528,6 +580,9 @@ class Profile(models.Model):
     banned_at = models.DateTimeField(null=True, blank=True)
     banned_reason = models.TextField(blank=True)
 
+    profile_photo = models.ImageField(upload_to="profile_photos/", null=True, blank=True)
+    profile_photo_public = models.BooleanField(default=True)
+
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
@@ -535,7 +590,42 @@ class Profile(models.Model):
 @receiver(post_save, sender=get_user_model())
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        # Staff/superusers are treated as fully trusted admins (auto-verified).
+        if getattr(instance, "is_staff", False) or getattr(instance, "is_superuser", False):
+            Profile.objects.create(
+                user=instance,
+                role="admin",
+                is_verified=True,
+                verification_status=Profile.VERIFICATION_VERIFIED,
+            )
+        else:
+            Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=get_user_model())
+def sync_staff_user_profile(sender, instance, created, **kwargs):
+    # Ensure any user toggled to staff/superuser becomes admin+verified.
+    if not (getattr(instance, "is_staff", False) or getattr(instance, "is_superuser", False)):
+        return
+    try:
+        p = getattr(instance, "profile", None)
+        if not p:
+            p = Profile.objects.create(user=instance)
+        updates = []
+        if p.role != "admin":
+            p.role = "admin"
+            updates.append("role")
+        if not p.is_verified:
+            p.is_verified = True
+            updates.append("is_verified")
+        if p.verification_status != Profile.VERIFICATION_VERIFIED:
+            p.verification_status = Profile.VERIFICATION_VERIFIED
+            updates.append("verification_status")
+        if updates:
+            p.save(update_fields=updates)
+    except Exception:
+        # Best-effort, do not block user saves.
+        return
 
 
 class Dispute(models.Model):
