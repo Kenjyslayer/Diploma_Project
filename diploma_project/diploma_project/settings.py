@@ -86,12 +86,16 @@ MIDDLEWARE = [
 # Rate limiting rules (fixed window).
 # For production multi-instance deployments, set RATE_LIMIT_CACHE_ALIAS to a shared cache (e.g. Redis).
 RATE_LIMIT_RULES = {
-    # Anti-bruteforce
+    # Anti-bruteforce (paths include language prefix from i18n_patterns, e.g. /en/login/)
+    "POST /en/login/": {"window_seconds": 60, "max_requests": 10, "key_prefix": "login", "include_username": True},
+    "POST /uk/login/": {"window_seconds": 60, "max_requests": 10, "key_prefix": "login", "include_username": True},
     "POST /login/": {"window_seconds": 60, "max_requests": 10, "key_prefix": "login", "include_username": True},
     # Token endpoints
     "POST /o/token/": {"window_seconds": 60, "max_requests": 20, "key_prefix": "oauth_token"},
     "POST /api/auth/jwt/token/": {"window_seconds": 60, "max_requests": 20, "key_prefix": "jwt_token"},
-    # Anti-spam
+    # Anti-spam (i18n-prefixed create URL)
+    "POST /en/create/": {"window_seconds": 60, "max_requests": 6, "key_prefix": "create_request"},
+    "POST /uk/create/": {"window_seconds": 60, "max_requests": 6, "key_prefix": "create_request"},
     "POST /create/": {"window_seconds": 60, "max_requests": 6, "key_prefix": "create_request"},
     "POST /requests/": {"window_seconds": 60, "max_requests": 30, "key_prefix": "requests_list"},
     "POST /requests/*/report/": {"window_seconds": 60, "max_requests": 8, "key_prefix": "report_request"},
