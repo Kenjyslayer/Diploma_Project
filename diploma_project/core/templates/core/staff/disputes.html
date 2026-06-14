@@ -1,11 +1,12 @@
 {% extends 'core/staff/base_staff.html' %}
-{% block staff_title %}Disputes{% endblock %}
+{% load i18n %}
+
+{% block staff_title %}{% trans "Disputes" %}{% endblock %}
 {% block staff_content %}
-  <h1 class="h3 mb-4">Disputes</h1>
+  <h1 class="h3 mb-4">{% trans "Disputes" %}</h1>
   <div class="alert alert-light border small">
-    <div class="fw-semibold mb-1">Purpose</div>
-    Disputes are opened by contributors during the active <strong>send window</strong> (contribution status “pending”) when they need staff help:
-    wrong carrier/drop-off details, post office refused the shipment, issues with the shipping slip/QR, or any workflow blocker after owner acceptance.
+    <div class="fw-semibold mb-1">{% trans "Purpose" %}</div>
+    {% trans "Disputes are opened by contributors during the active send window (status pending) when they need staff help: wrong drop-off, refused shipment, shipping slip/QR issues, or other blockers after owner acceptance." %}
   </div>
   {% for d in disputes %}
     <div class="card mb-3 border-0 shadow-sm">
@@ -18,16 +19,16 @@
           </div>
           <form method="post" action="{% url 'staff_dispute_resolve' d.id %}" class="d-flex gap-2 flex-wrap">
             {% csrf_token %}
-            <input type="text" name="admin_note" class="form-control form-control-sm" placeholder="Resolution note (optional)" style="min-width:200px;">
-            <button type="submit" class="btn btn-sm btn-success" {% if d.status != 'open' %}disabled{% endif %}>Resolve</button>
+            <input type="text" name="admin_note" class="form-control form-control-sm" placeholder="{% trans "Resolution note (optional)" %}" style="min-width:200px;">
+            <button type="submit" class="btn btn-sm btn-success" {% if d.status != 'open' %}disabled{% endif %}>{% trans "Resolve" %}</button>
           </form>
         </div>
-        <div class="mt-2 small"><strong>By:</strong> {{ d.created_by.username }} · <strong>Contribution:</strong> {{ d.contribution.id }}</div>
+        <div class="mt-2 small"><strong>{% trans "By:" %}</strong> {{ d.created_by.username }} · <strong>{% trans "Contribution:" %}</strong> {{ d.contribution.id }}</div>
         <p class="mb-0 mt-2">{{ d.reason }}</p>
-        {% if d.admin_note %}<p class="mt-2 small text-muted mb-0"><strong>Notes:</strong> {{ d.admin_note }}</p>{% endif %}
+        {% if d.admin_note %}<p class="mt-2 small text-muted mb-0"><strong>{% trans "Notes:" %}</strong> {{ d.admin_note }}</p>{% endif %}
       </div>
     </div>
   {% empty %}
-    <p class="text-muted">No disputes.</p>
+    <p class="text-muted">{% trans "No disputes." %}</p>
   {% endfor %}
 {% endblock %}

@@ -1,24 +1,24 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
-{% block title %}Open dispute{% endblock %}
+{% block title %}{% trans "Open dispute" %}{% endblock %}
 
 {% block content %}
-  <h2 class="mb-3">Open dispute</h2>
+  <h2 class="mb-3">{% trans "Open dispute" %}</h2>
   <div class="alert alert-light border small">
-    <div class="fw-semibold mb-1">What is a dispute?</div>
-    Use disputes when something goes wrong <strong>after the owner accepted your offer</strong> and the contribution is in the active <strong>send window</strong> (status “pending”).
-    Examples: the post office refuses the shipment, the QR/slip can’t be used, wrong drop-off details, or you need staff help to unblock the workflow.
+    <div class="fw-semibold mb-1">{% trans "What is a dispute?" %}</div>
+    {% trans "Use disputes when something goes wrong after the owner accepted your offer and the contribution is in the active send window (status “pending”). Examples: the post office refuses the shipment, the QR/slip can’t be used, wrong drop-off details, or you need staff help to unblock the workflow." %}
   </div>
 
   <div class="mb-3 text-muted small">
-    Contribution to <strong>{{ contribution.request.title }}</strong> (qty {{ contribution.quantity }})
-    {% if contribution.expires_at %}· send by <strong>{{ contribution.expires_at|date:"Y-m-d H:i" }} UTC</strong>{% endif %}
+    {% blocktrans with title=contribution.request.title quantity=contribution.quantity %}Contribution to <strong>{{ title }}</strong> (qty {{ quantity }}){% endblocktrans %}
+    {% if contribution.expires_at %}· {% blocktrans with deadline=contribution.expires_at|date:"Y-m-d H:i" %}send by <strong>{{ deadline }} UTC</strong>{% endblocktrans %}{% endif %}
   </div>
 
   <form method="post" class="card card-body">
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="btn btn-danger" type="submit">Submit dispute</button>
-    <a class="btn btn-link" href="{% url 'dashboard' %}">Cancel</a>
+    <button class="btn btn-danger" type="submit">{% trans "Submit dispute" %}</button>
+    <a class="btn btn-link" href="{% url 'dashboard' %}">{% trans "Cancel" %}</a>
   </form>
 {% endblock %}

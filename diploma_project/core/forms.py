@@ -3,7 +3,20 @@ from typing import Optional
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.utils.translation import gettext_lazy as _
+
 from .models import Request, Contribution, Dispute
+
+
+def _carrier_choices():
+    return [
+        (Request.DELIVERY_KIND_NOVA, _("Nova Poshta (branch / parcel locker)")),
+        (Request.DELIVERY_KIND_UKR, _("Ukrposhta (post office)")),
+    ]
+
+
+def _role_choices():
+    return [("civil", _("Civil")), ("military", _("Military"))]
 
 
 class LoginForm(AuthenticationForm):
@@ -23,20 +36,17 @@ class RegisterForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     phone_number = forms.CharField(
-        label="Phone number",
+        label=_("Phone number"),
         widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "+380..."}),
     )
     role = forms.ChoiceField(
-        label="Account type",
-        choices=[("civil", "Civil"), ("military", "Military")],
+        label=_("Account type"),
+        choices=_role_choices(),
         widget=forms.Select(attrs={"class": "form-select"}),
     )
     preferred_dropoff_kind = forms.ChoiceField(
-        label="Preferred drop-off (carrier)",
-        choices=[
-            (Request.DELIVERY_KIND_NOVA, "Nova Poshta (branch / parcel locker)"),
-            (Request.DELIVERY_KIND_UKR, "Ukrposhta (post office)"),
-        ],
+        label=_("Preferred drop-off (carrier)"),
+        choices=_carrier_choices(),
         widget=forms.Select(attrs={"class": "form-select", "id": "id_pref_delivery_kind"}),
     )
     preferred_np_city_ref = forms.CharField(
@@ -134,27 +144,27 @@ class RegisterForm(UserCreationForm):
                 and cleaned.get('preferred_np_warehouse_ref')
                 and cleaned.get('preferred_np_label')
             ):
-                self.add_error('preferred_np_label', 'Select a Nova Poshta city and branch.')
+                self.add_error('preferred_np_label', _('Select a Nova Poshta city and branch.'))
         elif kind == Request.DELIVERY_KIND_UKR:
             cleaned['preferred_np_city_ref'] = ''
             cleaned['preferred_np_warehouse_ref'] = ''
             cleaned['preferred_np_city_label'] = ''
             cleaned['preferred_np_label'] = ''
             if not (cleaned.get('preferred_up_postcode') and cleaned.get('preferred_up_label')):
-                self.add_error('preferred_up_label', 'Enter postcode and select or describe an Ukrposhta office.')
+                self.add_error('preferred_up_label', _('Enter postcode and select or describe an Ukrposhta office.'))
         else:
-            self.add_error('preferred_dropoff_kind', 'Choose your preferred carrier.')
+            self.add_error('preferred_dropoff_kind', _('Choose your preferred carrier.'))
         return cleaned
 
 
 class VerificationUploadForm(forms.Form):
     passport_scan = forms.FileField(
-        label="Passport scan",
+        label=_("Passport scan"),
         required=True,
         widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
     )
     reserve_plus_pdf = forms.FileField(
-        label='\"Резерв+\" PDF',
+        label=_('"Резерв+" PDF'),
         required=False,
         widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
     )
@@ -162,11 +172,41 @@ class VerificationUploadForm(forms.Form):
 
 class RequestCloseForm(forms.Form):
     reason = forms.CharField(
-        label='Reason for closing',
+        label=_('Reason for closing'),
         required=False,
         max_length=2000,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
     )
+
+
+class ProfileAvatarForm(forms.Form):
+    profile_photo = forms.ImageField(
+        label=_("Avatar"),
+        required=False,
+        widget=forms.ClearableFileInput(attrs={"class": "form-control", "accept": "image/*"}),
+    )
+    remove_photo = forms.BooleanField(
+        label=_("Remove current photo"),
+        required=False,
+        initial=False,
+    )
+    profile_photo_public = forms.BooleanField(
+        label=_("Show my profile photo publicly"),
+        required=False,
+        initial=True,
+    )
+
+    def apply_to_profile(self, profile) -> None:
+        if self.cleaned_data.get("remove_photo"):
+            if profile.profile_photo:
+                profile.profile_photo.delete(save=False)
+            profile.profile_photo = None
+        elif self.cleaned_data.get("profile_photo"):
+            if profile.profile_photo:
+                profile.profile_photo.delete(save=False)
+            profile.profile_photo = self.cleaned_data["profile_photo"]
+        profile.profile_photo_public = bool(self.cleaned_data.get("profile_photo_public"))
+        profile.save(update_fields=["profile_photo", "profile_photo_public"])
 
 
 class ProfileSettingsForm(forms.Form):
@@ -174,24 +214,18 @@ class ProfileSettingsForm(forms.Form):
     last_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}))
     phone_number = forms.CharField(
-        label="Phone number",
+        label=_("Phone number"),
         required=False,
         widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "+380..."}),
     )
     role = forms.ChoiceField(
-        label="Account type",
-        choices=[("civil", "Civil"), ("military", "Military")],
+        label=_("Account type"),
+        choices=_role_choices(),
         widget=forms.Select(attrs={"class": "form-select"}),
     )
-    profile_photo = forms.ImageField(required=False)
-    profile_photo_public = forms.BooleanField(required=False, initial=True)
-
     preferred_dropoff_kind = forms.ChoiceField(
-        label="Preferred drop-off (carrier)",
-        choices=[
-            (Request.DELIVERY_KIND_NOVA, "Nova Poshta (branch / parcel locker)"),
-            (Request.DELIVERY_KIND_UKR, "Ukrposhta (post office)"),
-        ],
+        label=_("Preferred drop-off (carrier)"),
+        choices=_carrier_choices(),
         widget=forms.Select(attrs={"class": "form-select", "id": "id_pref_delivery_kind"}),
     )
     preferred_np_city_ref = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id": "id_pref_np_city_ref"}))
@@ -217,6 +251,9 @@ class ProfileSettingsForm(forms.Form):
     def __init__(self, *args, user=None, **kwargs):
         self.user = user
         super().__init__(*args, **kwargs)
+        self.fields["first_name"].label = _("First name")
+        self.fields["last_name"].label = _("Last name")
+        self.fields["email"].label = _("Email")
 
     def clean(self):
         cleaned = super().clean()
@@ -230,16 +267,16 @@ class ProfileSettingsForm(forms.Form):
                 and cleaned.get('preferred_np_warehouse_ref')
                 and cleaned.get('preferred_np_label')
             ):
-                self.add_error('preferred_np_label', 'Select a Nova Poshta city and branch.')
+                self.add_error('preferred_np_label', _('Select a Nova Poshta city and branch.'))
         elif kind == Request.DELIVERY_KIND_UKR:
             cleaned['preferred_np_city_ref'] = ''
             cleaned['preferred_np_warehouse_ref'] = ''
             cleaned['preferred_np_city_label'] = ''
             cleaned['preferred_np_label'] = ''
             if not (cleaned.get('preferred_up_postcode') and cleaned.get('preferred_up_label')):
-                self.add_error('preferred_up_label', 'Enter postcode and select or describe an Ukrposhta office.')
+                self.add_error('preferred_up_label', _('Enter postcode and select or describe an Ukrposhta office.'))
         else:
-            self.add_error('preferred_dropoff_kind', 'Choose your preferred carrier.')
+            self.add_error('preferred_dropoff_kind', _('Choose your preferred carrier.'))
         return cleaned
 
     def save(self):
@@ -270,10 +307,6 @@ class ProfileSettingsForm(forms.Form):
         elif p.preferred_dropoff_kind == Request.DELIVERY_KIND_UKR:
             p.preferred_dropoff_point = p.preferred_up_label
 
-        photo = self.cleaned_data.get("profile_photo")
-        if photo:
-            p.profile_photo = photo
-        p.profile_photo_public = bool(self.cleaned_data.get("profile_photo_public"))
         # Changing account type forces re-verification.
         if old_role != new_role:
             p.is_verified = False
@@ -293,6 +326,12 @@ class RequestForm(forms.ModelForm):
             'category',
             'total_quantity',
         ]
+        labels = {
+            'title': _('Title'),
+            'description': _('Description'),
+            'category': _('Category'),
+            'total_quantity': _('Total quantity'),
+        }
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
@@ -308,7 +347,8 @@ class RequestEditForm(RequestForm):
         fulfilled = getattr(inst, "fulfilled_quantity", 0) if inst else 0
         if total is not None and fulfilled and total < fulfilled:
             raise forms.ValidationError(
-                f"Total quantity cannot be less than already fulfilled ({fulfilled})."
+                _("Total quantity cannot be less than already fulfilled (%(fulfilled)s).")
+                % {"fulfilled": fulfilled}
             )
         return total
 
@@ -331,10 +371,8 @@ class ContributionProposeForm(forms.Form):
     )
     contrib_delivery_kind = forms.ChoiceField(
         required=False,
-        choices=[
-            (Request.DELIVERY_KIND_NOVA, 'Nova Poshta (branch / parcel locker)'),
-            (Request.DELIVERY_KIND_UKR, 'Ukrposhta (post office)'),
-        ],
+        label=_("Your drop-off (carrier)"),
+        choices=_carrier_choices(),
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_contrib_delivery_kind'}),
     )
     contrib_np_city_ref = forms.CharField(
@@ -400,15 +438,15 @@ class ContributionProposeForm(forms.Form):
                     and cleaned.get('contrib_np_warehouse_ref')
                     and cleaned.get('contrib_np_label')
                 ):
-                    self.add_error('contrib_np_label', 'Select a Nova Poshta city and warehouse.')
+                    self.add_error('contrib_np_label', _('Select a Nova Poshta city and warehouse.'))
             elif kind == Request.DELIVERY_KIND_UKR:
                 cleaned['contrib_np_city_ref'] = ''
                 cleaned['contrib_np_warehouse_ref'] = ''
                 cleaned['contrib_np_label'] = ''
                 if not (cleaned.get('contrib_up_postcode') and cleaned.get('contrib_up_label')):
-                    self.add_error('contrib_up_label', 'Enter postcode and select or describe an Ukrposhta office.')
+                    self.add_error('contrib_up_label', _('Enter postcode and select or describe an Ukrposhta office.'))
             else:
-                self.add_error('contrib_delivery_kind', 'Choose how you will drop off the parcel.')
+                self.add_error('contrib_delivery_kind', _('Choose how you will drop off the parcel.'))
         else:
             for k in (
                 'contrib_delivery_kind',
@@ -421,7 +459,7 @@ class ContributionProposeForm(forms.Form):
             ):
                 cleaned[k] = ''
             if not (cleaned.get('contrib_dropoff_note') or '').strip():
-                self.add_error('contrib_dropoff_note', 'Describe your shipping / handoff plan.')
+                self.add_error('contrib_dropoff_note', _('Describe your shipping / handoff plan.'))
         return cleaned
 
 
@@ -429,7 +467,7 @@ class OwnerContributionNoteForm(forms.Form):
     note = forms.CharField(
         required=False,
         max_length=2000,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Optional message'}),
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': _('Optional message')}),
     )
 
 
@@ -453,7 +491,7 @@ class DisputeForm(forms.ModelForm):
 
 class MessageForm(forms.Form):
     body = forms.CharField(
-        label='Message',
+        label=_('Message'),
         widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         min_length=1,
         max_length=5000,

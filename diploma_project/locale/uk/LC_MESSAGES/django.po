@@ -16,10 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: .\diploma_project\core\templates\core\base.html:8
 #: .\diploma_project\core\templates\core\base.html:23
@@ -39,7 +36,7 @@ msgstr "Запити"
 #: .\diploma_project\core\templates\core\staff\base_staff.html:11
 #: .\diploma_project\core\templates\core\staff\dashboard.html:4
 msgid "Dashboard"
-msgstr "Дашборд"
+msgstr "Панель"
 
 #: .\diploma_project\core\templates\core\base.html:35
 msgid "My requests"
@@ -62,7 +59,7 @@ msgstr "Повідомлення"
 #: .\diploma_project\core\templates\core\staff\base_staff.html:4
 #: .\diploma_project\core\templates\core\staff\users.html:29
 msgid "Admin"
-msgstr "Адмін"
+msgstr "Адміністратор"
 
 #: .\diploma_project\core\templates\core\base.html:77
 msgid "Language"
@@ -117,7 +114,7 @@ msgstr "Переглянути всі →"
 
 #: .\diploma_project\core\templates\core\dashboard.html:31
 msgid "Awaiting review"
-msgstr "Очікує перевірки"
+msgstr "Очікує перегляду"
 
 #: .\diploma_project\core\templates\core\dashboard.html:40
 msgid "You haven’t created any requests yet."
@@ -163,7 +160,7 @@ msgstr "Завантажити підтвердження"
 
 #: .\diploma_project\core\templates\core\dashboard.html:85
 msgid "Dispute"
-msgstr "Суперечка"
+msgstr "Спір"
 
 #: .\diploma_project\core\templates\core\dashboard.html:93
 #, fuzzy
@@ -268,7 +265,7 @@ msgstr "Відкриті запити"
 
 #: .\diploma_project\core\templates\core\home.html:12
 msgid "Browse needs, contribute partial quantities, and coordinate delivery."
-msgstr "Переглядайте потреби, робіть внески частинами та координуйте доставку."
+msgstr "Переглядайте потреби, допомагайте частково та координуйте доставку."
 
 #: .\diploma_project\core\templates\core\login.html:11
 #, fuzzy
@@ -319,7 +316,7 @@ msgstr "Виберіть відділення…"
 #, fuzzy
 #| msgid "code"
 msgid "Postcode"
-msgstr "код"
+msgstr "Поштовий індекс"
 
 #: .\diploma_project\core\templates\core\register.html:91
 #: .\diploma_project\core\templates\core\request_detail.html:262
@@ -349,7 +346,7 @@ msgstr "Власник"
 #, fuzzy
 #| msgid "New request"
 msgid "Report this request"
-msgstr "Створити запит"
+msgstr "Поскаржитись на запит"
 
 #: .\diploma_project\core\templates\core\request_detail.html:25
 msgid "Reason"
@@ -411,13 +408,15 @@ msgstr "Додаткових нотаток немає — узгодження 
 #, fuzzy
 #| msgid "Awaiting review"
 msgid "Awaiting your review"
-msgstr "Очікує перевірки"
+msgstr "Очікує вашої перевірки"
 
 #: .\diploma_project\core\templates\core\request_detail.html:112
 msgid ""
 "Accept starts the send window; request changes sends the proposal back for "
 "edits."
 msgstr ""
+"Прийняття відкриває вікно відправлення; запит змін повертає пропозицію на "
+"доопрацювання."
 
 #: .\diploma_project\core\templates\core\request_detail.html:116
 msgid "Bulk action (optional note applied to all)"
@@ -485,7 +484,8 @@ msgstr "Дії власника"
 
 #: .\diploma_project\core\templates\core\request_detail.html:179
 msgid "You can edit this request or close it if it’s no longer needed."
-msgstr "Ви можете відредагувати запит або закрити його, якщо він більше не потрібен."
+msgstr ""
+"Ви можете відредагувати запит або закрити його, якщо він більше не потрібен."
 
 #: .\diploma_project\core\templates\core\request_detail.html:187
 msgid "Close reason"
@@ -503,7 +503,7 @@ msgstr "необов’язково"
 #, fuzzy
 #| msgid "New request"
 msgid "Close request"
-msgstr "Створити запит"
+msgstr "Закрити запит"
 
 #: .\diploma_project\core\templates\core\request_detail.html:200
 msgid "Propose a contribution"
@@ -512,8 +512,11 @@ msgstr "Запропонувати внесок"
 #: .\diploma_project\core\templates\core\request_detail.html:201
 msgid ""
 "Pick where you will drop off the parcel (post office for Ukraine). The "
-"request owner must accept before a send deadline and verification code apply."
+"request owner must accept before a send deadline and verification code "
+"apply."
 msgstr ""
+"Оберіть відділення для посилки (Україна). Власник має прийняти внесок, перш "
+"ніж діють дедлайн і код перевірки."
 
 #: .\diploma_project\core\templates\core\request_detail.html:207
 msgid "Could not send proposal."
@@ -532,6 +535,8 @@ msgid ""
 "Set NOVA_POSHTA_API_KEY to load cities and branches. You can still describe "
 "the branch after selecting if the API is offline."
 msgstr ""
+"Вкажіть NOVA_POSHTA_API_KEY для міст і відділень. Якщо API недоступний — "
+"опишіть відділення після вибору."
 
 #: .\diploma_project\core\templates\core\request_detail.html:247
 msgid "Select warehouse…"
@@ -539,7 +544,9 @@ msgstr "Виберіть відділення…"
 
 #: .\diploma_project\core\templates\core\request_detail.html:267
 msgid "Configure Ukrposhta API env vars, or type the office line manually."
-msgstr "Налаштуйте змінні середовища Ukrposhta API або введіть рядок відділення вручну."
+msgstr ""
+"Налаштуйте змінні середовища Ukrposhta API або введіть рядок відділення "
+"вручну."
 
 #: .\diploma_project\core\templates\core\request_detail.html:277
 msgid "How will you ship?"
@@ -581,7 +588,7 @@ msgstr "Деталі"
 
 #: .\diploma_project\core\templates\core\request_list_fragment.html:55
 msgid "Open"
-msgstr "Відкрити"
+msgstr "Відкритий"
 
 #: .\diploma_project\core\templates\core\request_list_fragment.html:62
 msgid "No description."
@@ -636,7 +643,7 @@ msgstr "Внески"
 #, fuzzy
 #| msgid "Dispute"
 msgid "Disputes"
-msgstr "Суперечка"
+msgstr "Суперечки"
 
 #: .\diploma_project\core\templates\core\staff\base_staff.html:21
 msgid "Django admin"
@@ -654,7 +661,7 @@ msgstr "Огляд операцій"
 #, fuzzy
 #| msgid "My requests"
 msgid "Open disputes"
-msgstr "Відкриті запити"
+msgstr "Відкриті суперечки"
 
 #: .\diploma_project\core\templates\core\staff\dashboard.html:37
 msgid "Open disputes →"
@@ -685,6 +692,8 @@ msgid ""
 "Use the sidebar for day‑to‑day operations. Full model access remains in "
 "Django admin."
 msgstr ""
+"Щоденні операції — у бічному меню. Повний доступ до моделей — в Django "
+"admin."
 
 #: .\diploma_project\core\templates\core\staff\users.html:8
 msgid "Filters"
@@ -720,7 +729,7 @@ msgstr "Логін"
 
 #: .\diploma_project\core\templates\core\staff\users.html:25
 msgid "Email"
-msgstr "Ел. пошта"
+msgstr "Електронна пошта"
 
 #: .\diploma_project\core\templates\core\staff\users.html:26
 msgid "Role"
@@ -815,15 +824,20 @@ msgid ""
 "Your verification is pending review. You can post or contribute only after "
 "approval."
 msgstr ""
+"Верифікація на перевірці. Публікувати та робити внески можна лише після "
+"схвалення."
 
 #: .\diploma_project\core\views.py:207
 msgid ""
-"Upload verification documents in your Profile before posting or contributing."
+"Upload verification documents in your Profile before posting or "
+"contributing."
 msgstr ""
+"Завантажте документи верифікації в профілі перед публікацією та внесками."
 
 #: .\diploma_project\core\views.py:220
 msgid "Your account is banned from posting and contributing."
-msgstr "Ваш акаунт заблоковано. Ви не можете створювати запити або робити внески."
+msgstr ""
+"Ваш акаунт заблоковано. Ви не можете створювати запити або робити внески."
 
 #: .\diploma_project\core\views.py:226
 #, python-format
@@ -832,7 +846,9 @@ msgstr "Ваш акаунт тимчасово обмежено до %(until)s (
 
 #: .\diploma_project\core\views.py:274
 msgid "Account type changed. Please re-upload verification documents below."
-msgstr "Тип акаунта змінено. Будь ласка, повторно завантажте документи для верифікації нижче."
+msgstr ""
+"Тип акаунта змінено. Будь ласка, повторно завантажте документи для "
+"верифікації нижче."
 
 #: .\diploma_project\core\views.py:277
 msgid "Profile updated."
@@ -870,13 +886,13 @@ msgstr "Вкажіть коректну причину."
 #: .\diploma_project\core\views.py:648
 msgid ""
 "A reason is required when there are contributions/proposals on this request."
-msgstr ""
+msgstr "Потрібна причина, якщо на цьому запиті є внески або пропозиції."
 
 #: .\diploma_project\core\views.py:658
 #, fuzzy
 #| msgid "Requests"
 msgid "Request closed."
-msgstr "Запити"
+msgstr "Запит закрито."
 
 #: .\diploma_project\core\views.py:675
 msgid "Closed requests cannot be edited."
@@ -886,7 +902,7 @@ msgstr "Закриті запити не можна редагувати."
 #, fuzzy
 #| msgid "Profile updated."
 msgid "Request updated."
-msgstr "Профіль оновлено."
+msgstr "Запит оновлено."
 
 #: .\diploma_project\core\views_staff.py:75
 #: .\diploma_project\core\views_staff.py:159
@@ -935,7 +951,7 @@ msgstr "Військова верифікація вимагає PDF \"Резе�
 #: .\diploma_project\core\views_staff.py:322
 #, python-format
 msgid "User %(username)s permanently banned."
-msgstr "Користувача %(username)s забанено назавжди."
+msgstr "Користувача %(username)s забанено."
 
 #: .\diploma_project\core\views_staff.py:326
 msgid "Unknown moderation action."
@@ -985,6 +1001,8 @@ msgid ""
 "Staff approve/reject applies only after the request owner has accepted the "
 "contribution (status must be “Accepted — send within deadline”)."
 msgstr ""
+"Схвалення/відхилення персоналом — лише після прийняття внеску власником "
+"(статус «Прийнято — надіслати до дедлайну»)."
 
 #: .\diploma_project\core\views_staff.py:423
 msgid "Cannot verify without an uploaded proof file."
@@ -1010,6 +1028,781 @@ msgstr "Англійська"
 #: .\diploma_project\diploma_project\settings.py:143
 msgid "German"
 msgstr "Німецька"
+
+msgid "Civil"
+msgstr "Цивільний"
+
+msgid "Military"
+msgstr "Військовий"
+
+msgid "Partially fulfilled"
+msgstr "Частково виконано"
+
+msgid "Closed"
+msgstr "Закритий"
+
+msgid "Resolved"
+msgstr "Закрито"
+
+msgid "Ukraine"
+msgstr "Україна"
+
+msgid "Other (free text only — no carrier map)"
+msgstr "Інша країна (лише текст, без карти перевізника)"
+
+msgid "Manual description"
+msgstr "Ручний опис"
+
+msgid "Nova Poshta (parcel locker / branch)"
+msgstr "Нова Пошта (відділення / поштомат)"
+
+msgid "Ukrposhta (post office)"
+msgstr "Укрпошта (відділення)"
+
+msgid "Nova Poshta (branch / parcel locker)"
+msgstr "Нова Пошта (відділення / поштомат)"
+
+msgid "Awaiting request owner"
+msgstr "Очікує рішення власника"
+
+msgid "Changes requested by owner"
+msgstr "Власник просить зміни"
+
+msgid "Declined by request owner"
+msgstr "Відхилено власником"
+
+msgid "Withdrawn by contributor"
+msgstr "Відкликано учасником"
+
+msgid "Accepted — send within deadline"
+msgstr "Прийнято — надіслати до дедлайну"
+
+msgid "Approved (staff)"
+msgstr "Схвалено (персонал)"
+
+msgid "Rejected (staff)"
+msgstr "Відхилено (персонал)"
+
+msgid "Verified"
+msgstr "Верифіковано"
+
+msgid "Expired (not delivered in time)"
+msgstr "Протерміновано"
+
+msgid "Not submitted"
+msgstr "Не подано"
+
+msgid "Pending review"
+msgstr "На перевірці"
+
+msgid "Rejected"
+msgstr "Відхилено"
+
+msgid "Phone number"
+msgstr "Номер телефону"
+
+msgid "Account type"
+msgstr "Тип облікового запису"
+
+msgid "Preferred drop-off (carrier)"
+msgstr "Бажане відділення (перевізник)"
+
+msgid "Passport scan"
+msgstr "Скан паспорта"
+
+msgid "\"Резерв+\" PDF"
+msgstr "PDF \"Резерв+\""
+
+msgid "Reason for closing"
+msgstr "Причина закриття"
+
+msgid "Message"
+msgstr "Повідомлення"
+
+msgid "Optional message"
+msgstr "Необов’язкове повідомлення"
+
+msgid "Name"
+msgstr "Ім’я"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Preferred drop-off"
+msgstr "Бажане відділення"
+
+msgid "Documents uploaded"
+msgstr "Документи завантажено"
+
+msgid "Create request"
+msgstr "Створити запит"
+
+msgid "Create a request"
+msgstr "Створити запит"
+
+msgid "New demand"
+msgstr "Нова потреба"
+
+msgid "All requests"
+msgstr "Усі запити"
+
+msgid "Directory"
+msgstr "Каталог"
+
+msgid "Apply"
+msgstr "Застосувати"
+
+msgid "Reset"
+msgstr "Скинути"
+
+msgid "All visible"
+msgstr "Усі видимі"
+
+msgid "Any"
+msgstr "Будь-який"
+
+msgid "Submit"
+msgstr "Надіслати"
+
+msgid "Verification status"
+msgstr "Статус верифікації"
+
+msgid "Profile progress"
+msgstr "Заповнення профілю"
+
+msgid "Complete these steps to unlock posting and contributing."
+msgstr "Завершіть кроки, щоб створювати запити та робити внески."
+
+msgid "Account banned."
+msgstr "Обліковий запис заблоковано."
+
+msgid "You cannot create requests or contribute."
+msgstr "Ви не можете створювати запити чи робити внески."
+
+msgid "Account restricted until %(date)s UTC."
+msgstr "Обліковий запис обмежено до %(date)s UTC."
+
+msgid "You cannot create requests or contribute right now."
+msgstr "Зараз ви не можете створювати запити чи робити внески."
+
+msgid "Admin note:"
+msgstr "Нотатка адміна:"
+
+msgid "Pending review:"
+msgstr "На перевірці:"
+
+msgid "you can create requests or contribute only after staff approval."
+msgstr "створювати запити та внески можна лише після схвалення персоналом."
+
+msgid "Action required:"
+msgstr "Потрібна дія:"
+
+msgid ""
+"upload verification documents before you can create requests or contribute."
+msgstr "завантажте документи верифікації перед створенням запитів і внесками."
+
+msgid "Account settings"
+msgstr "Налаштування облікового запису"
+
+msgid "Save profile"
+msgstr "Зберегти профіль"
+
+msgid "Submit documents"
+msgstr "Надіслати документи"
+
+msgid "Verify with BankID (coming soon)"
+msgstr "Верифікація BankID (незабаром)"
+
+msgid "BankID integration placeholder — documents upload is required for now."
+msgstr "Інтеграція BankID — поки що потрібне завантаження документів."
+
+msgid "Delivery will be sent to"
+msgstr "Доставка буде на адресу"
+
+msgid "You can change it anytime in"
+msgstr "Можна змінити будь-коли в"
+
+msgid "Please fix the errors below"
+msgstr "Виправте помилки нижче"
+
+msgid "Suspicious request blocked"
+msgstr "Підозрілий запит заблоковано"
+
+msgid "Go to Profile"
+msgstr "Перейти в профіль"
+
+msgid "Back to form"
+msgstr "Назад до форми"
+
+msgid ""
+"Describe what you need. Delivery drop‑off is chosen automatically from your "
+"Profile preferred post office."
+msgstr "Опишіть потребу. Пункт доставки підставляється автоматично з профілю."
+
+msgid "Sign in"
+msgstr "Увійти"
+
+msgid "No open requests yet."
+msgstr "Відкритих запитів ще немає."
+
+msgid "Select a Nova Poshta city and branch."
+msgstr "Оберіть місто та відділення Нової Пошти."
+
+msgid "Enter postcode and select or describe an Ukrposhta office."
+msgstr "Вкажіть індекс і оберіть або опишіть відділення Укрпошти."
+
+msgid "Choose your preferred carrier."
+msgstr "Оберіть перевізника."
+
+msgid "Select a Nova Poshta city and warehouse."
+msgstr "Оберіть місто та склад Нової Пошти."
+
+msgid "Choose how you will drop off the parcel."
+msgstr "Оберіть, як передасте посилку."
+
+msgid "Describe your shipping / handoff plan."
+msgstr "Опишіть план відправлення / передачі."
+
+msgid "Total quantity cannot be less than already fulfilled (%(fulfilled)s)."
+msgstr ""
+"Загальна кількість не може бути меншою за уже виконану (%(fulfilled)s)."
+
+msgid ""
+"Filter visually by progress; open a card for details and contributions."
+msgstr "Фільтруйте за прогресом; відкрийте картку для деталей і внесків."
+
+msgid ""
+"Closed requests are hidden from the public list; owners and admins can still"
+" open them directly."
+msgstr ""
+"Закриті запити приховані в публічному списку; власник і адмін можуть "
+"відкрити напряму."
+
+msgid "Requests you created, with owner actions and proposal review."
+msgstr "Запити, які ви створили, з діями власника та переглядом пропозицій."
+
+msgid "Offers you submitted to other people's requests."
+msgstr "Пропозиції, які ви подали на чужі запити."
+
+msgid "View"
+msgstr "Переглянути"
+
+msgid "Open chat"
+msgstr "Відкрити чат"
+
+msgid "Open dispute"
+msgstr "Відкрити спір"
+
+msgid "Withdraw offer"
+msgstr "Відкликати пропозицію"
+
+msgid "Shipping slip"
+msgstr "Накладна"
+
+msgid "Revise offer"
+msgstr "Оновити пропозицію"
+
+msgid "Conversation"
+msgstr "Розмова"
+
+msgid "Send"
+msgstr "Надіслати"
+
+msgid "Type a message…"
+msgstr "Введіть повідомлення…"
+
+msgid "No conversations yet."
+msgstr "Розмов ще немає."
+
+msgid "Message center"
+msgstr "Центр повідомлень"
+
+msgid "Nova Poshta API key is missing. Offline demo cities are available."
+msgstr "Ключ API Нової Пошти відсутній. Доступні демо-міста."
+
+msgid ""
+"You are not available to request military things or your account gonna be "
+"restricted."
+msgstr ""
+"Ви не можете запитувати військове; обліковий запис може бути обмежено."
+
+msgid ""
+"Describe what you need. Delivery drop-off is chosen automatically from your "
+"Profile preferred post office."
+msgstr "Опишіть потребу. Пункт доставки підставляється з профілю."
+
+msgid "Publish request"
+msgstr "Опублікувати запит"
+
+msgid "awaiting review"
+msgstr "очікує перегляду"
+
+msgid "You have not created any requests yet."
+msgstr "Ви ще не створили жодного запиту."
+
+msgid "Your contribution proposals and send windows."
+msgstr "Ваші пропозиції внесків та терміни відправлення."
+
+msgid "Browse requests"
+msgstr "Переглянути запити"
+
+msgid "Awaiting owner"
+msgstr "Очікує власника"
+
+msgid "Changes requested"
+msgstr "Запитано зміни"
+
+msgid "Accepted — send window"
+msgstr "Прийнято — вікно відправлення"
+
+msgid "Withdrawn"
+msgstr "Відкликано"
+
+msgid "Declined"
+msgstr "Відхилено"
+
+msgid "Expired"
+msgstr "Протерміновано"
+
+msgid "Update proposal"
+msgstr "Оновити пропозицію"
+
+msgid ""
+"No offers yet. Open a request and click “Contribute” to send your first "
+"proposal."
+msgstr ""
+"Пропозицій ще немає. Відкрийте запит і натисніть «Запропонувати внесок»."
+
+msgid "Owner:"
+msgstr "Власник:"
+
+msgid "Qty"
+msgstr "К-ть"
+
+msgid "First name"
+msgstr "Ім’я"
+
+msgid "Last name"
+msgstr "Прізвище"
+
+msgid "Edit profile"
+msgstr "Редагувати профіль"
+
+msgid "Update your personal details and preferred drop-off point."
+msgstr "Оновіть особисті дані та бажане відділення."
+
+msgid "Changing account type resets verification and requires new documents."
+msgstr ""
+"Зміна типу облікового запису скидає верифікацію — потрібні нові документи."
+
+msgid "Profile photo"
+msgstr "Фото профілю"
+
+msgid "Upload new photo"
+msgstr "Завантажити нове фото"
+
+msgid "Show my profile photo publicly"
+msgstr "Показувати фото профілю публічно"
+
+msgid "created"
+msgstr "створено"
+
+msgid "send by"
+msgstr "надіслати до"
+
+msgid "Admins"
+msgstr "Адміни"
+
+msgid "AI-assisted moderation"
+msgstr "Модерація з підтримкою ШІ"
+
+msgid ""
+"This is a lightweight “AI assistant” queue based on policy rules. It reports"
+" suspicious submissions immediately."
+msgstr ""
+"Черга «ШІ-асистента» на основі правил політики; підозрілі подання фіксуються"
+" одразу."
+
+msgid "Open reports"
+msgstr "Відкриті звіти"
+
+msgid "Recently resolved"
+msgstr "Нещодавно закриті"
+
+msgid "No open reports."
+msgstr "Відкритих звітів немає."
+
+msgid "No resolved reports yet."
+msgstr "Закритих звітів ще немає."
+
+msgid "By"
+msgstr "Автор"
+
+msgid "Score"
+msgstr "Оцінка"
+
+msgid "Snapshot"
+msgstr "Знімок"
+
+msgid "Actions"
+msgstr "Дії"
+
+msgid "Action"
+msgstr "Дія"
+
+msgid "Note"
+msgstr "Нотатка"
+
+msgid "Notes:"
+msgstr "Нотатки:"
+
+msgid "Django user"
+msgstr "Користувач Django"
+
+msgid "(no title)"
+msgstr "(без назви)"
+
+msgid "Resolve note…"
+msgstr "Нотатка при закритті…"
+
+msgid "Resolve"
+msgstr "Закрити"
+
+msgid "1 hour"
+msgstr "1 год"
+
+msgid "24 hours"
+msgstr "24 год"
+
+msgid "7 days"
+msgstr "7 дн"
+
+msgid "by %(u)s"
+msgstr "від %(u)s"
+
+msgid "by %(username)s"
+msgstr "від %(username)s"
+
+msgid "Moderation actions"
+msgstr "Дії модерації"
+
+msgid "No action"
+msgstr "Без дії"
+
+msgid "Unrestrict"
+msgstr "Зняти обмеження"
+
+msgid "Temporary restrict"
+msgstr "Тимчасово обмежити"
+
+msgid "Permanent ban"
+msgstr "Постійний бан"
+
+msgid "Purpose"
+msgstr "Призначення"
+
+msgid ""
+"Disputes are opened by contributors during the active send window (status "
+"pending) when they need staff help: wrong drop-off, refused shipment, "
+"shipping slip/QR issues, or other blockers after owner acceptance."
+msgstr ""
+"Суперечки відкривають учасники під час активного вікна відправлення (статус "
+"pending): невірна точка, відмова на пошті, проблеми з накладною/QR тощо."
+
+msgid "Resolution note (optional)"
+msgstr "Нотатка рішення (необов’язково)"
+
+msgid "By:"
+msgstr "Від:"
+
+msgid "Contribution:"
+msgstr "Внесок:"
+
+msgid "No disputes."
+msgstr "Суперечок немає."
+
+msgid "Delivery"
+msgstr "Доставка"
+
+msgid "Hidden"
+msgstr "Приховано"
+
+msgid "Visible"
+msgstr "Видимо"
+
+msgid "Warning:"
+msgstr "Попередження:"
+
+msgid "Reason / warning…"
+msgstr "Причина / попередження…"
+
+msgid "Restore"
+msgstr "Відновити"
+
+msgid "Hide"
+msgstr "Приховати"
+
+msgid "Warn"
+msgstr "Попередити"
+
+msgid "Clear warning"
+msgstr "Зняти попередження"
+
+msgid "Type \"delete\""
+msgstr "введіть \"delete\""
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "Expires"
+msgstr "Діє до"
+
+msgid "Approve"
+msgstr "Схвалити"
+
+msgid "Reject"
+msgstr "Відхилити"
+
+msgid "Verify"
+msgstr "Верифікувати"
+
+msgid "User verifications"
+msgstr "Верифікація користувачів"
+
+msgid ""
+"Only staff/admin accounts can approve or reject verification documents."
+msgstr "Лише staff/admin можуть схвалювати або відхиляти документи."
+
+msgid "Pending"
+msgstr "В очікуванні"
+
+msgid "Passport"
+msgstr "Паспорт"
+
+msgid "Резерв+"
+msgstr "Резерв+"
+
+msgid "open"
+msgstr "відкрити"
+
+msgid "No pending verifications."
+msgstr "Немає верифікацій в очікуванні."
+
+msgid "Recent (pending / rejected)"
+msgstr "Нещодавні (очікування / відхилені)"
+
+msgid "No entries."
+msgstr "Записів немає."
+
+msgid "Superuser"
+msgstr "Суперкористувач"
+
+msgid "Create new admin"
+msgstr "Створити адміна"
+
+msgid "Create admin"
+msgstr "Створити адміна"
+
+msgid "Email (optional)"
+msgstr "Email (необов’язково)"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "h"
+msgstr "год"
+
+msgid "Type delete"
+msgstr "введіть \"delete\""
+
+msgid "User %(username)s unrestricted."
+msgstr "Користувача %(username)s розблоковано."
+
+msgid "User %(username)s restricted for %(hours)sh."
+msgstr "Користувача %(username)s обмежено на %(hours) год."
+
+msgid "Verified user %(username)s."
+msgstr "Користувача %(username)s верифіковано."
+
+msgid "Rejected verification for %(username)s."
+msgstr "Верифікацію %(username)s відхилено."
+
+msgid "Report #%(id)s resolved."
+msgstr "Звіт #%(id)s закрито."
+
+msgid "Report has no user/profile to action."
+msgstr "У звіті немає користувача/профілю для дії."
+
+msgid "Dispute #%(id)s marked resolved."
+msgstr "Суперечку #%(id)s позначено вирішеною."
+
+msgid "User %(username)s restricted for %(hours)s h."
+msgstr "Користувача %(username)s обмежено на %(hours)s год."
+
+msgid "Avatar"
+msgstr "Аватар"
+
+msgid "Save avatar"
+msgstr "Зберегти аватар"
+
+msgid "Avatar updated."
+msgstr "Аватар оновлено."
+
+msgid "Remove current photo"
+msgstr "Видалити поточне фото"
+
+msgid "Upload a photo (JPG, PNG, WebP). You can change or remove it anytime."
+msgstr ""
+"Завантажте фото (JPG, PNG, WebP). Можна змінити або видалити будь-коли."
+
+msgid "Hidden from others"
+msgstr "Приховано від інших"
+
+msgid ""
+"Chats are created automatically when you contribute to a request (you and "
+"the request owner)."
+msgstr ""
+"Чати створюються автоматично, коли ви робите внесок (ви та власник запиту)."
+
+msgid "With"
+msgstr "З"
+
+msgid ""
+"No conversations yet. Contribute to a request to start a chat with its "
+"owner."
+msgstr "Розмов ще немає. Зробіть внесок, щоб почати чат із власником."
+
+msgid "Back to messages"
+msgstr "Назад до повідомлень"
+
+msgid ""
+"Chat with <strong>%(username)s</strong> (coordinating delivery & handoff)."
+msgstr ""
+"Чат із <strong>%(username)s</strong> (координація доставки та передачі)."
+
+msgid "System"
+msgstr "Система"
+
+msgid "No messages yet. Say hello and agree on drop-off details."
+msgstr "Повідомлень ще немає. Домовтесь про деталі абгави."
+
+msgid "Contribution to <strong>%(title)s</strong> (%(quantity)s)"
+msgstr "Внесок до <strong>%(title)s</strong> (%(quantity)s)"
+
+msgid "Upload"
+msgstr "Завантажити"
+
+msgid "What is a dispute?"
+msgstr "Що таке спір?"
+
+msgid ""
+"Use disputes when something goes wrong after the owner accepted your offer "
+"and the contribution is in the active send window (status “pending”). "
+"Examples: the post office refuses the shipment, the QR/slip can’t be used, "
+"wrong drop-off details, or you need staff help to unblock the workflow."
+msgstr ""
+"Спори — коли після прийняття пропозиції щось пішло не так (активне вікно "
+"відправлення, статус pending): відмова на пошті, QR/накладна не працює, "
+"невірна абгава тощо."
+
+msgid "Contribution to <strong>%(title)s</strong> (qty %(quantity)s)"
+msgstr "Внесок до <strong>%(title)s</strong> (к-ть %(quantity)s)"
+
+msgid "send by <strong>%(deadline)s UTC</strong>"
+msgstr "надіслати до <strong>%(deadline)s UTC</strong>"
+
+msgid "Submit dispute"
+msgstr "Подати спір"
+
+msgid "Verify identity"
+msgstr "Верифікація особи"
+
+msgid "Identity verification"
+msgstr "Верифікація особи"
+
+msgid ""
+"Account type: <strong>%(role)s</strong>. Upload required documents to verify"
+" your profile."
+msgstr ""
+"Тип облікового запису: <strong>%(role)s</strong>. Завантажте документи для "
+"верифікації."
+
+msgid "Military verification requires a passport scan and a PDF of “Резерв+”."
+msgstr "Військова верифікація: скан паспорта та PDF «Резерв+»."
+
+msgid "Civil verification requires a passport scan."
+msgstr "Цивільна верифікація: скан паспорта."
+
+msgid "Update your proposal"
+msgstr "Оновити пропозицію"
+
+msgid "Please fix the following."
+msgstr "Виправте наступне."
+
+msgid "Resubmit proposal"
+msgstr "Надіслати пропозицію знову"
+
+msgid "Fulfillment MVP — handoff slip"
+msgstr "MVP — накладна передачі"
+
+msgid "Ship parcel · %(title)s"
+msgstr "Відправити посилку · %(title)s"
+
+msgid ""
+"Not an official carrier label. Nova Poshta, Hermes, DHL, etc. issue real "
+"waybills in their own apps or via business API. This page is a reference "
+"slip with your verification code and addresses so staff (or you) can "
+"identify the shipment. Create the actual shipment in the carrier’s system as"
+" usual."
+msgstr ""
+"Не офіційна етикетка перевізника. Справжні накладні — у додатках Nova "
+"Poshta, DHL тощо. Це довідковий бланк з кодом і адресами."
+
+msgid "QR code"
+msgstr "QR-код"
+
+msgid "Scan encodes JSON (ID, verification, ship-from / deliver hints)."
+msgstr "QR містить JSON (ID, код, адреси відправки/доставки)."
+
+msgid "Copy"
+msgstr "Копіювати"
+
+msgid "Copied."
+msgstr "Скопійовано."
+
+msgid "Send by (UTC)"
+msgstr "Надіслати до (UTC)"
+
+msgid "Your ship-from"
+msgstr "Відправка з"
+
+msgid "Deliver to (request)"
+msgstr "Доставка (запит)"
+
+msgid "What to tell the clerk"
+msgstr "Що сказати на пошті"
+
+msgid ""
+"“Please create a standard shipment to the recipient drop-off point (shown "
+"above).”"
+msgstr "«Створіть стандартне відправлення на пункт одержувача (вище).»"
+
+msgid "“Add this reference/verification code to the shipment note: %(code)s.”"
+msgstr "«Додайте код у примітку до відправлення: %(code)s.»"
+
+msgid ""
+"If asked, show this slip/QR so the code and addresses can be copied without "
+"typos."
+msgstr "За потреби покажіть цей бланк/QR для точного копіювання."
+
+msgid "Raw QR payload (JSON)"
+msgstr "Дані QR (JSON)"
+
+msgid "Copy code:"
+msgstr "Копіювати код:"
+
+msgid "Print"
+msgstr "Друк"
 
 #~ msgid "Fulfillment MVP"
 #~ msgstr "Платформа допомоги (MVP)"

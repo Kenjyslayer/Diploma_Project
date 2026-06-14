@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import views_media
 from . import views_shipping
 from . import views_staff
 
@@ -38,6 +39,12 @@ urlpatterns = [
     path('contributions/<int:contribution_id>/revise/', views.revise_contribution, name='revise_contribution'),
     path('contributions/<int:contribution_id>/upload-proof/', views.upload_proof, name='upload_proof'),
     path(
+        'files/contribution/<int:contribution_id>/proof/',
+        views_media.contribution_proof_file,
+        name='contribution_proof_file',
+    ),
+    path('files/profile-photo/<int:user_id>/', views_media.profile_photo_file, name='profile_photo_file'),
+    path(
         'contributions/<int:contribution_id>/withdraw/',
         views.withdraw_contribution,
         name='withdraw_contribution',
@@ -69,6 +76,11 @@ urlpatterns = [
     path('staff/admins/<int:user_id>/action/', views_staff.staff_admin_action, name='staff_admin_action'),
     path('staff/users/', views_staff.staff_users, name='staff_users'),
     path('staff/users/<int:user_id>/action/', views_staff.staff_user_action, name='staff_user_action'),
+    path(
+        'staff/files/verification/<int:user_id>/<str:file_kind>/',
+        views_media.staff_verification_file,
+        name='staff_verification_file',
+    ),
     path('staff/verifications/', views_staff.staff_verifications, name='staff_verifications'),
     path(
         'staff/verifications/<int:user_id>/action/',

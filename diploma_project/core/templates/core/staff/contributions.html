@@ -1,12 +1,14 @@
 {% extends 'core/staff/base_staff.html' %}
-{% block staff_title %}Contributions{% endblock %}
+{% load i18n %}
+
+{% block staff_title %}{% trans "Contributions" %}{% endblock %}
 {% block staff_content %}
-  <h1 class="h3 mb-4">Contributions</h1>
+  <h1 class="h3 mb-4">{% trans "Contributions" %}</h1>
   <div class="table-responsive shadow-sm rounded-3 border">
     <table class="table table-hover align-middle mb-0 small">
       <thead class="table-light">
         <tr>
-          <th>ID</th><th>User</th><th>Request</th><th>Qty</th><th>Status</th><th>Expires</th><th>Actions</th>
+          <th>{% trans "ID" %}</th><th>{% trans "User" %}</th><th>{% trans "Request" %}</th><th>{% trans "Qty" %}</th><th>{% trans "Status" %}</th><th>{% trans "Expires" %}</th><th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -21,12 +23,15 @@
             <td>
               <form method="post" action="{% url 'staff_contribution_status' c.id %}" class="d-flex flex-wrap gap-1">
                 {% csrf_token %}
+                {% if c.proof_file %}
+                  <a class="btn btn-sm btn-outline-secondary" href="{% url 'contribution_proof_file' c.id %}" target="_blank" rel="noopener">{% trans "Proof" %}</a>
+                {% endif %}
                 {% if c.status == 'pending' %}
-                  <button class="btn btn-sm btn-success" name="action" value="approve">Approve</button>
-                  <button class="btn btn-sm btn-outline-danger" name="action" value="reject">Reject</button>
+                  <button class="btn btn-sm btn-success" name="action" value="approve">{% trans "Approve" %}</button>
+                  <button class="btn btn-sm btn-outline-danger" name="action" value="reject">{% trans "Reject" %}</button>
                 {% endif %}
                 {% if c.status == 'approved' and c.proof_file %}
-                  <button class="btn btn-sm btn-primary" name="action" value="verify">Verify</button>
+                  <button class="btn btn-sm btn-primary" name="action" value="verify">{% trans "Verify" %}</button>
                 {% endif %}
               </form>
             </td>

@@ -1,16 +1,18 @@
 {% extends 'core/staff/base_staff.html' %}
-{% block staff_title %}Moderation{% endblock %}
-{% block staff_content %}
-  <h1 class="h3 mb-4">AI-assisted moderation</h1>
-  <p class="text-muted">This is a lightweight “AI assistant” queue based on policy rules. It reports suspicious submissions immediately.</p>
+{% load i18n %}
 
-  <h2 class="h5 mt-4 mb-3">Open reports</h2>
+{% block staff_title %}{% trans "Moderation" %}{% endblock %}
+{% block staff_content %}
+  <h1 class="h3 mb-4">{% trans "AI-assisted moderation" %}</h1>
+  <p class="text-muted">{% trans "This is a lightweight “AI assistant” queue based on policy rules. It reports suspicious submissions immediately." %}</p>
+
+  <h2 class="h5 mt-4 mb-3">{% trans "Open reports" %}</h2>
   {% if open_reports %}
     <div class="table-responsive shadow-sm rounded-3 border mb-4">
       <table class="table table-hover align-middle mb-0 small">
         <thead class="table-light">
           <tr>
-            <th>ID</th><th>Created</th><th>By</th><th>Score</th><th>Reason</th><th>Snapshot</th><th>Actions</th>
+            <th>{% trans "ID" %}</th><th>{% trans "Created" %}</th><th>{% trans "By" %}</th><th>{% trans "Score" %}</th><th>{% trans "Reason" %}</th><th>{% trans "Snapshot" %}</th><th>{% trans "Actions" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -21,20 +23,20 @@
               <td>
                 <div class="fw-semibold">{{ r.created_by.username|default:"—" }}</div>
                 {% if r.created_by and r.created_by.profile %}
-                  <div class="text-muted small">Role: {{ r.created_by.profile.get_role_display }}</div>
+                  <div class="text-muted small">{% trans "Role" %}: {{ r.created_by.profile.get_role_display }}</div>
                 {% endif %}
                 {% if r.created_by and r.created_by.profile.banned_at %}
-                  <span class="badge text-bg-danger">Banned</span>
+                  <span class="badge text-bg-danger">{% trans "banned" %}</span>
                 {% elif r.created_by and r.created_by.profile.restricted_until and r.created_by.profile.restricted_until > now %}
-                  <span class="badge text-bg-warning">Restricted</span>
+                  <span class="badge text-bg-warning">{% trans "restricted" %}</span>
                 {% else %}
-                  <span class="badge text-bg-success">OK</span>
+                  <span class="badge text-bg-success">{% trans "ok" %}</span>
                 {% endif %}
                 {% if r.created_by_id %}
                   <div class="mt-2 d-flex flex-wrap gap-2">
-                    <a class="btn btn-sm btn-outline-secondary" href="/admin/auth/user/{{ r.created_by_id }}/change/" target="_blank" rel="noopener">Django user</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/admin/auth/user/{{ r.created_by_id }}/change/" target="_blank" rel="noopener">{% trans "Django user" %}</a>
                     {% if r.created_by.profile %}
-                      <a class="btn btn-sm btn-outline-secondary" href="/admin/core/profile/{{ r.created_by.profile.id }}/change/" target="_blank" rel="noopener">Profile</a>
+                      <a class="btn btn-sm btn-outline-secondary" href="/admin/core/profile/{{ r.created_by.profile.id }}/change/" target="_blank" rel="noopener">{% trans "Profile" %}</a>
                     {% endif %}
                   </div>
                 {% endif %}
@@ -42,28 +44,28 @@
               <td><span class="badge text-bg-warning">{{ r.score }}</span></td>
               <td class="text-muted">{{ r.reason }}</td>
               <td style="max-width: 420px;">
-                <div class="fw-semibold">{{ r.snapshot_title|default:"(no title)" }}</div>
+                <div class="fw-semibold">{% if r.snapshot_title %}{{ r.snapshot_title }}{% else %}{% trans "(no title)" %}{% endif %}</div>
                 <div class="text-muted" style="white-space: pre-wrap;">{{ r.snapshot_description|truncatechars:220 }}</div>
               </td>
               <td style="min-width: 380px;">
                 <form method="post" action="{% url 'staff_moderation_action' r.id %}" class="d-flex flex-wrap gap-2 mb-2 align-items-center">
                   {% csrf_token %}
-                  <input class="form-control form-control-sm" name="note" placeholder="Note…" style="max-width: 200px;">
+                  <input class="form-control form-control-sm" name="note" placeholder="{% trans "Note…" %}" style="max-width: 200px;">
                   <select class="form-select form-select-sm" name="hours" style="max-width: 90px;">
-                    <option value="1">1h</option>
-                    <option value="24" selected>24h</option>
-                    <option value="168">7d</option>
+                    <option value="1">{% trans "1 hour" %}</option>
+                    <option value="24" selected>{% trans "24 hours" %}</option>
+                    <option value="168">{% trans "7 days" %}</option>
                   </select>
-                  <div class="btn-group btn-group-sm" role="group" aria-label="Moderation actions">
-                    <button class="btn btn-outline-warning" type="submit" name="action" value="restrict_temp">Temp restrict</button>
-                    <button class="btn btn-outline-danger" type="submit" name="action" value="ban_permanent">Ban</button>
-                    <button class="btn btn-outline-secondary" type="submit" name="action" value="unrestrict">Unban</button>
+                  <div class="btn-group btn-group-sm" role="group" aria-label="{% trans "Moderation actions" %}">
+                    <button class="btn btn-outline-warning" type="submit" name="action" value="restrict_temp">{% trans "Temp restrict" %}</button>
+                    <button class="btn btn-outline-danger" type="submit" name="action" value="ban_permanent">{% trans "Ban" %}</button>
+                    <button class="btn btn-outline-secondary" type="submit" name="action" value="unrestrict">{% trans "Unban" %}</button>
                   </div>
                 </form>
                 <form method="post" action="{% url 'staff_moderation_resolve' r.id %}" class="d-flex flex-wrap gap-2">
                   {% csrf_token %}
-                  <input class="form-control form-control-sm" name="admin_note" placeholder="Resolve note…" style="max-width: 200px;">
-                  <button class="btn btn-sm btn-success" type="submit">Resolve</button>
+                  <input class="form-control form-control-sm" name="admin_note" placeholder="{% trans "Resolve note…" %}" style="max-width: 200px;">
+                  <button class="btn btn-sm btn-success" type="submit">{% trans "Resolve" %}</button>
                 </form>
               </td>
             </tr>
@@ -72,15 +74,15 @@
       </table>
     </div>
   {% else %}
-    <p class="text-muted">No open reports.</p>
+    <p class="text-muted">{% trans "No open reports." %}</p>
   {% endif %}
 
-  <h2 class="h5 mt-4 mb-3">Recently resolved</h2>
+  <h2 class="h5 mt-4 mb-3">{% trans "Recently resolved" %}</h2>
   <div class="table-responsive shadow-sm rounded-3 border">
     <table class="table table-hover align-middle mb-0 small">
       <thead class="table-light">
         <tr>
-          <th>ID</th><th>By</th><th>Score</th><th>Action</th><th>Resolved</th><th>Note</th>
+          <th>{% trans "ID" %}</th><th>{% trans "By" %}</th><th>{% trans "Score" %}</th><th>{% trans "Action" %}</th><th>{% trans "Resolved" %}</th><th>{% trans "Note" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -93,8 +95,8 @@
               {% if r.action_taken and r.action_taken != 'none' %}
                 <div class="fw-semibold">{{ r.get_action_taken_display }}</div>
                 <div class="text-muted">
-                  {% if r.action_duration_hours %}{{ r.action_duration_hours }}h · {% endif %}
-                  {% if r.action_by %}by {{ r.action_by.username }}{% else %}—{% endif %}
+                  {% if r.action_duration_hours %}{{ r.action_duration_hours }}{% trans "h" context "hours abbreviation" %} · {% endif %}
+                  {% if r.action_by %}{% blocktrans with u=r.action_by.username %}by {{ u }}{% endblocktrans %}{% else %}—{% endif %}
                   {% if r.action_at %} · {{ r.action_at|date:"Y-m-d H:i" }}{% endif %}
                 </div>
               {% else %}
@@ -105,10 +107,9 @@
             <td class="text-muted">{{ r.admin_note|default:"—" }}</td>
           </tr>
         {% empty %}
-          <tr><td colspan="6" class="text-muted">No resolved reports yet.</td></tr>
+          <tr><td colspan="6" class="text-muted">{% trans "No resolved reports yet." %}</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 {% endblock %}
-

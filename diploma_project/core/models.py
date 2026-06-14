@@ -9,12 +9,13 @@ from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class Request(models.Model):
     CATEGORY_CHOICES = [
-        ('civil', 'Civil'),
-        ('military', 'Military'),
+        ('civil', _('Civil')),
+        ('military', _('Military')),
     ]
 
     title = models.CharField(max_length=255)
@@ -29,8 +30,8 @@ class Request(models.Model):
     COUNTRY_UA = 'UA'
     COUNTRY_OTHER = 'OTHER'
     DELIVERY_COUNTRY_CHOICES = [
-        (COUNTRY_UA, 'Ukraine'),
-        (COUNTRY_OTHER, 'Other (free text only — no carrier map)'),
+        (COUNTRY_UA, _('Ukraine')),
+        (COUNTRY_OTHER, _('Other (free text only — no carrier map)')),
     ]
     delivery_country = models.CharField(
         max_length=16,
@@ -42,9 +43,9 @@ class Request(models.Model):
     DELIVERY_KIND_NOVA = 'nova_poshta'
     DELIVERY_KIND_UKR = 'ukrposhta'
     DELIVERY_KIND_CHOICES = [
-        (DELIVERY_KIND_MANUAL, 'Manual description'),
-        (DELIVERY_KIND_NOVA, 'Nova Poshta (parcel locker / branch)'),
-        (DELIVERY_KIND_UKR, 'Ukrposhta (post office)'),
+        (DELIVERY_KIND_MANUAL, _('Manual description')),
+        (DELIVERY_KIND_NOVA, _('Nova Poshta (parcel locker / branch)')),
+        (DELIVERY_KIND_UKR, _('Ukrposhta (post office)')),
     ]
     delivery_kind = models.CharField(
         max_length=20,
@@ -68,9 +69,9 @@ class Request(models.Model):
     STATUS_PARTIALLY_FULFILLED = 'partially_fulfilled'
     STATUS_CLOSED = 'closed'
     STATUS_CHOICES = [
-        (STATUS_OPEN, 'Open'),
-        (STATUS_PARTIALLY_FULFILLED, 'Partially fulfilled'),
-        (STATUS_CLOSED, 'Closed'),
+        (STATUS_OPEN, _('Open')),
+        (STATUS_PARTIALLY_FULFILLED, _('Partially fulfilled')),
+        (STATUS_CLOSED, _('Closed')),
     ]
     status = models.CharField(max_length=32, choices=STATUS_CHOICES, default=STATUS_OPEN)
 
@@ -192,15 +193,15 @@ class Contribution(models.Model):
     STATUS_VERIFIED = 'verified'
     STATUS_EXPIRED = 'expired'
     STATUS_CHOICES = [
-        (STATUS_PROPOSED, 'Awaiting request owner'),
-        (STATUS_REVISION_REQUESTED, 'Changes requested by owner'),
-        (STATUS_DECLINED, 'Declined by request owner'),
-        (STATUS_WITHDRAWN, 'Withdrawn by contributor'),
-        (STATUS_PENDING, 'Accepted — send within deadline'),
-        (STATUS_APPROVED, 'Approved (staff)'),
-        (STATUS_REJECTED, 'Rejected (staff)'),
-        (STATUS_VERIFIED, 'Verified'),
-        (STATUS_EXPIRED, 'Expired (not delivered in time)'),
+        (STATUS_PROPOSED, _('Awaiting request owner')),
+        (STATUS_REVISION_REQUESTED, _('Changes requested by owner')),
+        (STATUS_DECLINED, _('Declined by request owner')),
+        (STATUS_WITHDRAWN, _('Withdrawn by contributor')),
+        (STATUS_PENDING, _('Accepted — send within deadline')),
+        (STATUS_APPROVED, _('Approved (staff)')),
+        (STATUS_REJECTED, _('Rejected (staff)')),
+        (STATUS_VERIFIED, _('Verified')),
+        (STATUS_EXPIRED, _('Expired (not delivered in time)')),
     ]
 
     FULFILLMENT_DAYS = 7
@@ -461,8 +462,8 @@ class ModerationReport(models.Model):
     STATUS_OPEN = 'open'
     STATUS_RESOLVED = 'resolved'
     STATUS_CHOICES = [
-        (STATUS_OPEN, 'Open'),
-        (STATUS_RESOLVED, 'Resolved'),
+        (STATUS_OPEN, _('Open')),
+        (STATUS_RESOLVED, _('Resolved')),
     ]
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -489,10 +490,10 @@ class ModerationReport(models.Model):
     ACTION_RESTRICT_TEMP = 'restrict_temp'
     ACTION_BAN_PERMANENT = 'ban_permanent'
     ACTION_CHOICES = [
-        (ACTION_NONE, 'No action'),
-        (ACTION_UNRESTRICT, 'Unrestrict'),
-        (ACTION_RESTRICT_TEMP, 'Temporary restrict'),
-        (ACTION_BAN_PERMANENT, 'Permanent ban'),
+        (ACTION_NONE, _('No action')),
+        (ACTION_UNRESTRICT, _('Unrestrict')),
+        (ACTION_RESTRICT_TEMP, _('Temporary restrict')),
+        (ACTION_BAN_PERMANENT, _('Permanent ban')),
     ]
     action_taken = models.CharField(max_length=20, choices=ACTION_CHOICES, default=ACTION_NONE)
     action_note = models.TextField(blank=True)
@@ -525,9 +526,9 @@ class ModerationReport(models.Model):
 
 class Profile(models.Model):
     ROLE_CHOICES = [
-        ('civil', 'Civil'),
-        ('military', 'Military'),
-        ('admin', 'Admin'),
+        ('civil', _('Civil')),
+        ('military', _('Military')),
+        ('admin', _('Admin')),
     ]
 
     VERIFICATION_NONE = 'none'
@@ -535,10 +536,10 @@ class Profile(models.Model):
     VERIFICATION_VERIFIED = 'verified'
     VERIFICATION_REJECTED = 'rejected'
     VERIFICATION_STATUS_CHOICES = [
-        (VERIFICATION_NONE, 'Not submitted'),
-        (VERIFICATION_PENDING, 'Pending review'),
-        (VERIFICATION_VERIFIED, 'Verified'),
-        (VERIFICATION_REJECTED, 'Rejected'),
+        (VERIFICATION_NONE, _('Not submitted')),
+        (VERIFICATION_PENDING, _('Pending review')),
+        (VERIFICATION_VERIFIED, _('Verified')),
+        (VERIFICATION_REJECTED, _('Rejected')),
     ]
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -632,8 +633,8 @@ class Dispute(models.Model):
     STATUS_OPEN = 'open'
     STATUS_RESOLVED = 'resolved'
     STATUS_CHOICES = [
-        (STATUS_OPEN, 'Open'),
-        (STATUS_RESOLVED, 'Resolved'),
+        (STATUS_OPEN, _('Open')),
+        (STATUS_RESOLVED, _('Resolved')),
     ]
 
     contribution = models.ForeignKey(Contribution, on_delete=models.CASCADE, related_name='disputes')

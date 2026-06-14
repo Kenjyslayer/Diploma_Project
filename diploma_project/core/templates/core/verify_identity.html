@@ -1,15 +1,15 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
-{% block title %}Verify identity{% endblock %}
+{% block title %}{% trans "Verify identity" %}{% endblock %}
 
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-md-8 col-lg-7">
       <div class="page-hero p-4 mb-4">
-        <h1 class="h4 mb-1">Identity verification</h1>
+        <h1 class="h4 mb-1">{% trans "Identity verification" %}</h1>
         <p class="text-muted small mb-0">
-          Account type: <strong>{{ profile.get_role_display }}</strong>.
-          Upload required documents to verify your profile.
+          {% blocktrans with role=profile.get_role_display %}Account type: <strong>{{ role }}</strong>. Upload required documents to verify your profile.{% endblocktrans %}
         </p>
       </div>
 
@@ -17,11 +17,11 @@
         <div class="card-body p-4">
           {% if profile.role == 'military' %}
             <div class="alert alert-warning border-0 small">
-              <strong>Military verification</strong> requires a passport scan and a PDF of <strong>“Резерв+”</strong>.
+              {% trans "Military verification requires a passport scan and a PDF of “Резерв+”." %}
             </div>
           {% else %}
             <div class="alert alert-info border-0 small">
-              <strong>Civil verification</strong> requires a passport scan.
+              {% trans "Civil verification requires a passport scan." %}
             </div>
           {% endif %}
 
@@ -35,11 +35,10 @@
                 {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
               </div>
             {% endfor %}
-            <button class="btn btn-primary w-100 py-2" type="submit">Submit documents</button>
+            <button class="btn btn-primary w-100 py-2" type="submit">{% trans "Submit documents" %}</button>
           </form>
         </div>
       </div>
     </div>
   </div>
 {% endblock %}
-

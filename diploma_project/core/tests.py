@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.test import Client, TestCase, override_settings
 from django.utils import timezone
 
@@ -177,6 +178,24 @@ class OAuth2ApiIntegrationTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertIn("Need blankets", resp.content.decode("utf-8"))
 
-from django.test import TestCase
 
-# Create your tests here.
+class ProtectedMediaTests(TestCase):
+    def setUp(self):
+        self.staff = User.objects.create_user(username="staff1", password="pass12345", is_staff=True)
+        self.user = User.objects.create_user(username="verify1", password="pass12345")
+        self.user.profile.passport_scan.save("scan.jpg", ContentFile(b"fake-jpeg"), save=True)
+        self.user.profile.verification_status = Profile.VERIFICATION_PENDING
+        self.user.profile.save(update_fields=["verification_status"])
+
+    def test_staff_can_open_passport_via_protected_url(self):
+        c = Client()
+        self.assertTrue(c.login(username="staff1", password="pass12345"))
+        resp = c.get(f"/en/staff/files/verification/{self.user.id}/passport/")
+        self.assertEqual(resp.status_code, 200)
+        body = b"".join(resp.streaming_content)
+        self.assertEqual(body, b"fake-jpeg")
+
+    def test_anonymous_cannot_open_passport(self):
+        resp = Client().get(f"/en/staff/files/verification/{self.user.id}/passport/")
+        self.assertIn(resp.status_code, (302, 403))
+

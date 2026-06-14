@@ -220,7 +220,7 @@ def staff_user_action(request, user_id: int):
         p.banned_reason = ""
         p.save(update_fields=["restricted_until", "restricted_reason", "banned_at", "banned_reason"])
         log_audit(request=request, actor=request.user, action="user.unrestrict", target_user=u)
-        messages.success(request, f"User {u.username} unrestricted.")
+        messages.success(request, _("User %(username)s unrestricted.") % {"username": u.username})
     elif action == "restrict_temp":
         try:
             hours = int(hours_raw)
@@ -237,7 +237,10 @@ def staff_user_action(request, user_id: int):
             target_user=u,
             meta={"hours": hours, "note": note},
         )
-        messages.success(request, f"User {u.username} restricted for {hours}h.")
+        messages.success(
+            request,
+            _("User %(username)s restricted for %(hours)s h.") % {"username": u.username, "hours": hours},
+        )
     elif action == "ban_permanent":
         p.banned_at = timezone.now()
         p.banned_reason = note or "Permanent ban applied by staff."
@@ -245,7 +248,7 @@ def staff_user_action(request, user_id: int):
         p.restricted_reason = ""
         p.save(update_fields=["banned_at", "banned_reason", "restricted_until", "restricted_reason"])
         log_audit(request=request, actor=request.user, action="user.ban_permanent", target_user=u, meta={"note": note})
-        messages.success(request, f"User {u.username} permanently banned.")
+        messages.success(request, _("User %(username)s permanently banned.") % {"username": u.username})
     else:
         messages.error(request, _("Unknown action."))
     back = request.META.get("HTTP_REFERER") or None
@@ -294,14 +297,14 @@ def staff_verification_action(request, user_id: int):
         p.is_verified = True
         p.save(update_fields=["verification_status", "verification_note", "is_verified"])
         log_audit(request=request, actor=request.user, action="verification.approve", target_user=u, meta={"note": note})
-        messages.success(request, f"Verified user {u.username}.")
+        messages.success(request, _("Verified user %(username)s.") % {"username": u.username})
     elif action == "reject":
         p.verification_status = Profile.VERIFICATION_REJECTED
         p.verification_note = note or "Rejected."
         p.is_verified = False
         p.save(update_fields=["verification_status", "verification_note", "is_verified"])
         log_audit(request=request, actor=request.user, action="verification.reject", target_user=u, meta={"note": note})
-        messages.success(request, f"Rejected verification for {u.username}.")
+        messages.success(request, _("Rejected verification for %(username)s.") % {"username": u.username})
     else:
         messages.error(request, _("Unknown action."))
     return redirect("staff_verifications")
@@ -338,7 +341,7 @@ def staff_moderation_resolve(request, report_id: int):
     r.admin_note = (request.POST.get("admin_note") or "").strip()
     r.save(update_fields=["status", "resolved_at", "resolved_by", "admin_note"])
     log_audit(request=request, actor=request.user, action="moderation.resolve", meta={"report_id": r.id})
-    messages.success(request, f"Report #{r.id} resolved.")
+    messages.success(request, _("Report #%(id)s resolved.") % {"id": r.id})
     return redirect("staff_moderation")
 
 
@@ -352,7 +355,7 @@ def staff_moderation_action(request, report_id: int):
     actor = r.created_by
     p = getattr(actor, "profile", None) if actor else None
     if not actor or not p:
-        messages.error(request, "Report has no user/profile to action.")
+        messages.error(request, _("Report has no user/profile to action."))
         return redirect("staff_moderation")
 
     if action == "unrestrict":
@@ -388,7 +391,7 @@ def staff_moderation_action(request, report_id: int):
             target_user=actor,
             meta={"report_id": r.id, "note": note},
         )
-        messages.success(request, f"User {actor.username} unrestricted.")
+        messages.success(request, _("User %(username)s unrestricted.") % {"username": actor.username})
         return redirect("staff_moderation")
 
     if action == "restrict_temp":
@@ -427,7 +430,10 @@ def staff_moderation_action(request, report_id: int):
             target_user=actor,
             meta={"report_id": r.id, "hours": hours, "note": note},
         )
-        messages.success(request, f"User {actor.username} restricted for {hours}h.")
+        messages.success(
+            request,
+            _("User %(username)s restricted for %(hours)s h.") % {"username": actor.username, "hours": hours},
+        )
         return redirect("staff_moderation")
 
     if action == "ban_permanent":
@@ -604,5 +610,5 @@ def staff_dispute_resolve(request, dispute_id: int):
     d.resolved_at = timezone.now()
     d.admin_note = (d.admin_note or "") + "\n" + request.POST.get("admin_note", "").strip()
     d.save()
-    messages.success(request, f"Dispute #{d.id} marked resolved.")
+    messages.success(request, _("Dispute #%(id)s marked resolved.") % {"id": d.id})
     return redirect("staff_disputes")

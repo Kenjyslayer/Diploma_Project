@@ -1,17 +1,17 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Revise proposal · {{ req.title }}{% endblock %}
+{% block title %}{% trans "Revise offer" %} · {{ req.title }}{% endblock %}
 
 {% block content %}
   <div class="page-hero p-4 mb-4">
-    <h1 class="h3 mb-2">Update your proposal</h1>
+    <h1 class="h3 mb-2">{% trans "Update your proposal" %}</h1>
     <p class="text-muted mb-0">{{ req.title }}</p>
     {% if contribution.owner_note %}
       <div class="alert alert-primary border-0 mt-3 mb-0">
-        <div class="fw-semibold mb-1">Owner requested changes</div>
+        <div class="fw-semibold mb-1">{% trans "Owner requested changes" %}</div>
         <div class="small">{{ contribution.owner_note }}</div>
-        <div class="small text-white-50 mt-2">Update the quantity or your drop-off details below, then click “Resubmit proposal”.</div>
+        <div class="small text-white-50 mt-2">{% trans "Update the quantity or your drop-off details below, then click “Resubmit proposal”." %}</div>
       </div>
     {% endif %}
   </div>
@@ -23,7 +23,7 @@
         {% if form.errors %}
           <div class="col-12">
             <div class="alert alert-danger py-2 small" role="alert">
-              <strong>Please fix the following.</strong>
+              <strong>{% trans "Please fix the following." %}</strong>
               {% for field in form %}
                 {% for err in field.errors %}
                   <div class="mt-1">{{ field.label }}: {{ err }}</div>
@@ -36,7 +36,7 @@
           </div>
         {% endif %}
         <div class="col-md-4 col-lg-3">
-          <label class="form-label small fw-semibold">Quantity</label>
+          <label class="form-label small fw-semibold">{% trans "Quantity" %}</label>
           {{ form.quantity }}
           {% if form.quantity.errors %}<div class="text-danger small">{{ form.quantity.errors }}</div>{% endif %}
         </div>
@@ -48,22 +48,22 @@
                data-api-nova-warehouses="{% url 'api_nova_warehouses' %}"
                data-api-up="{% url 'api_ukrposhta_postoffices' %}"
                data-nova-configured="{% if nova_poshta_configured %}1{% else %}0{% endif %}">
-            <label class="form-label small fw-semibold">Your drop-off (carrier)</label>
+            <label class="form-label small fw-semibold">{% trans "Your drop-off (carrier)" %}</label>
             {{ form.contrib_delivery_kind }}
             {% if form.contrib_delivery_kind.errors %}<div class="text-danger small">{{ form.contrib_delivery_kind.errors }}</div>{% endif %}
 
             <div id="contrib-panel-nova" style="display:none;" class="mt-3">
               <div class="alert alert-info py-2 small" id="contrib-np-api-hint" style="display:none;">
-                Set <code>NOVA_POSHTA_API_KEY</code> to load cities and branches.
+                {% trans "Set NOVA_POSHTA_API_KEY to load cities and branches. You can still describe the branch after selecting if the API is offline." %}
               </div>
               <div class="mb-2">
-                <label class="form-label small fw-semibold">City</label>
+                <label class="form-label small fw-semibold">{% trans "City" %}</label>
                 <input type="search" class="form-control" id="contrib-np-city-search" placeholder="Kyiv, Lviv…" autocomplete="off" aria-controls="contrib-np-city-results">
                 <div id="contrib-np-city-results" class="list-group mt-1 shadow-sm position-relative" style="max-height:220px;overflow-y:auto;display:none;z-index:5;"></div>
               </div>
               <div class="mb-2">
-                <label class="form-label small fw-semibold">Branch / parcel locker</label>
-                <select class="form-select" id="contrib-np-wh-pick"><option value="">Select warehouse…</option></select>
+                <label class="form-label small fw-semibold">{% trans "Branch / parcel locker" %}</label>
+                <select class="form-select" id="contrib-np-wh-pick"><option value="">{% trans "Select warehouse…" %}</option></select>
               </div>
               {{ form.contrib_np_city_ref }}
               {{ form.contrib_np_warehouse_ref }}
@@ -74,31 +74,31 @@
             <div id="contrib-panel-ukrposhta" style="display:none;" class="mt-3">
               <div class="row g-2 align-items-end mb-2">
                 <div class="col-md-4">
-                  <label class="form-label small fw-semibold">Postcode</label>
+                  <label class="form-label small fw-semibold">{% trans "Postcode" %}</label>
                   {{ form.contrib_up_postcode }}
                 </div>
                 <div class="col-md-4">
-                  <button type="button" class="btn btn-outline-primary" id="contrib-btn-up-search">Find offices</button>
+                  <button type="button" class="btn btn-outline-primary" id="contrib-btn-up-search">{% trans "Find offices" %}</button>
                 </div>
               </div>
               <div id="contrib-up-results" class="mb-2 small"></div>
               {{ form.contrib_up_office_id }}
-              <label class="form-label small fw-semibold">Office line</label>
+              <label class="form-label small fw-semibold">{% trans "Office line" %}</label>
               {{ form.contrib_up_label }}
               {% if form.contrib_up_label.errors %}<div class="text-danger small">{{ form.contrib_up_label.errors }}</div>{% endif %}
             </div>
           </div>
         {% else %}
           <div class="col-12" id="delivery-contrib-root" data-mode="other">
-            <label class="form-label small fw-semibold">How will you ship?</label>
+            <label class="form-label small fw-semibold">{% trans "How will you ship?" %}</label>
             {{ form.contrib_dropoff_note }}
             {% if form.contrib_dropoff_note.errors %}<div class="text-danger small">{{ form.contrib_dropoff_note.errors }}</div>{% endif %}
           </div>
         {% endif %}
 
         <div class="col-12 d-flex gap-2">
-          <button class="btn btn-primary" type="submit">Resubmit proposal</button>
-          <a class="btn btn-outline-secondary" href="{% url 'request_detail' req.id %}">Back</a>
+          <button class="btn btn-primary" type="submit">{% trans "Resubmit proposal" %}</button>
+          <a class="btn btn-outline-secondary" href="{% url 'request_detail' req.id %}">{% trans "Back" %}</a>
         </div>
       </form>
     </div>

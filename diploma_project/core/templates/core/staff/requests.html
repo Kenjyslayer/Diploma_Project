@@ -1,12 +1,14 @@
 {% extends 'core/staff/base_staff.html' %}
-{% block staff_title %}Requests{% endblock %}
+{% load i18n %}
+
+{% block staff_title %}{% trans "Requests" %}{% endblock %}
 {% block staff_content %}
-  <h1 class="h3 mb-4">All requests</h1>
+  <h1 class="h3 mb-4">{% trans "All requests" %}</h1>
   <div class="table-responsive shadow-sm rounded-3 border">
     <table class="table table-hover align-middle mb-0 small">
       <thead class="table-light">
         <tr>
-          <th>ID</th><th>Title</th><th>Category</th><th>Status</th><th>Owner</th><th>Delivery</th><th>Moderation</th><th></th>
+          <th>{% trans "ID" %}</th><th>{% trans "Title" %}</th><th>{% trans "Category" %}</th><th>{% trans "Status" %}</th><th>{% trans "Owner" %}</th><th>{% trans "Delivery" %}</th><th>{% trans "Moderation" %}</th><th></th>
         </tr>
       </thead>
       <tbody>
@@ -29,40 +31,40 @@
             </td>
             <td style="min-width: 260px;">
               {% if r.is_hidden %}
-                <span class="badge text-bg-danger">Hidden</span>
+                <span class="badge text-bg-danger">{% trans "Hidden" %}</span>
                 <div class="text-muted small">
                   {% if r.hidden_at %}{{ r.hidden_at|date:"Y-m-d H:i" }}{% endif %}
-                  {% if r.hidden_by %}· by {{ r.hidden_by.username }}{% endif %}
+                  {% if r.hidden_by %}· {% blocktrans with u=r.hidden_by.username %}by {{ u }}{% endblocktrans %}{% endif %}
                 </div>
                 {% if r.hidden_reason %}<div class="small text-muted">{{ r.hidden_reason }}</div>{% endif %}
               {% else %}
-                <span class="badge text-bg-success">Visible</span>
+                <span class="badge text-bg-success">{% trans "Visible" %}</span>
               {% endif %}
               {% if r.staff_warning %}
                 <div class="alert alert-warning py-2 small mt-2 mb-2">
-                  <strong>Warning:</strong> {{ r.staff_warning }}
+                  <strong>{% trans "Warning:" %}</strong> {{ r.staff_warning }}
                 </div>
               {% endif %}
               <form method="post" action="{% url 'staff_request_action' r.id %}" class="d-flex flex-wrap gap-2 mt-2">
                 {% csrf_token %}
-                <input class="form-control form-control-sm" name="note" placeholder="Reason / warning…" style="max-width: 170px;">
+                <input class="form-control form-control-sm" name="note" placeholder="{% trans "Reason / warning…" %}" style="max-width: 170px;">
                 {% if r.is_hidden %}
-                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="unhide">Restore</button>
+                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="unhide">{% trans "Restore" %}</button>
                 {% else %}
-                  <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="hide">Hide</button>
+                  <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="hide">{% trans "Hide" %}</button>
                 {% endif %}
-                <button class="btn btn-sm btn-outline-warning" type="submit" name="action" value="warn">Warn</button>
+                <button class="btn btn-sm btn-outline-warning" type="submit" name="action" value="warn">{% trans "Warn" %}</button>
                 {% if r.staff_warning %}
-                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="clear_warning">Clear warning</button>
+                  <button class="btn btn-sm btn-outline-secondary" type="submit" name="action" value="clear_warning">{% trans "Clear warning" %}</button>
                 {% endif %}
               </form>
               <form method="post" action="{% url 'staff_request_action' r.id %}" class="d-flex flex-wrap gap-2 mt-2">
                 {% csrf_token %}
-                <input class="form-control form-control-sm" name="confirm" placeholder='Type "delete"' style="max-width: 120px;">
-                <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="delete">Delete</button>
+                <input class="form-control form-control-sm" name="confirm" placeholder='{% trans "Type delete" %}' style="max-width: 120px;">
+                <button class="btn btn-sm btn-outline-danger" type="submit" name="action" value="delete">{% trans "Delete" %}</button>
               </form>
             </td>
-            <td><a class="btn btn-sm btn-outline-primary" href="{% url 'request_detail' r.id %}">View</a></td>
+            <td><a class="btn btn-sm btn-outline-primary" href="{% url 'request_detail' r.id %}">{% trans "View" %}</a></td>
           </tr>
         {% endfor %}
       </tbody>

@@ -1,19 +1,21 @@
 {% extends 'core/staff/base_staff.html' %}
-{% block staff_title %}Verifications{% endblock %}
+{% load i18n %}
+
+{% block staff_title %}{% trans "Verifications" %}{% endblock %}
 {% block staff_content %}
-  <h1 class="h3 mb-4">User verifications</h1>
+  <h1 class="h3 mb-4">{% trans "User verifications" %}</h1>
 
   <div class="alert alert-light border small">
-    Only staff/admin accounts can approve or reject verification documents.
+    {% trans "Only staff/admin accounts can approve or reject verification documents." %}
   </div>
 
-  <h2 class="h5 mt-4 mb-3">Pending</h2>
+  <h2 class="h5 mt-4 mb-3">{% trans "Pending" %}</h2>
   {% if pending %}
     <div class="table-responsive shadow-sm rounded-3 border mb-4">
       <table class="table table-hover align-middle mb-0 small">
         <thead class="table-light">
           <tr>
-            <th>User</th><th>Role</th><th>Passport</th><th>Резерв+</th><th>Status</th><th>Actions</th>
+            <th>{% trans "User" %}</th><th>{% trans "Role" %}</th><th>{% trans "Passport" %}</th><th>{% trans "Резерв+" %}</th><th>{% trans "Status" %}</th><th>{% trans "Actions" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -23,14 +25,14 @@
               <td>{{ u.profile.get_role_display }}</td>
               <td>
                 {% if u.profile.passport_scan %}
-                  <a href="{{ u.profile.passport_scan.url }}" target="_blank" rel="noopener">open</a>
+                  <a href="{% url 'staff_verification_file' u.id 'passport' %}" target="_blank" rel="noopener">{% trans "open" %}</a>
                 {% else %}
                   —
                 {% endif %}
               </td>
               <td>
                 {% if u.profile.reserve_plus_pdf %}
-                  <a href="{{ u.profile.reserve_plus_pdf.url }}" target="_blank" rel="noopener">open</a>
+                  <a href="{% url 'staff_verification_file' u.id 'reserve' %}" target="_blank" rel="noopener">{% trans "open" %}</a>
                 {% else %}
                   —
                 {% endif %}
@@ -39,9 +41,9 @@
               <td style="min-width: 360px;">
                 <form method="post" action="{% url 'staff_verification_action' u.id %}" class="d-flex flex-wrap gap-2">
                   {% csrf_token %}
-                  <input class="form-control form-control-sm" name="note" placeholder="Optional note…" style="max-width: 220px;">
-                  <button class="btn btn-sm btn-success" name="action" value="approve">Approve</button>
-                  <button class="btn btn-sm btn-outline-danger" name="action" value="reject">Reject</button>
+                  <input class="form-control form-control-sm" name="note" placeholder="{% trans "Optional note…" %}" style="max-width: 220px;">
+                  <button class="btn btn-sm btn-success" name="action" value="approve">{% trans "Approve" %}</button>
+                  <button class="btn btn-sm btn-outline-danger" name="action" value="reject">{% trans "Reject" %}</button>
                 </form>
               </td>
             </tr>
@@ -50,15 +52,15 @@
       </table>
     </div>
   {% else %}
-    <p class="text-muted">No pending verifications.</p>
+    <p class="text-muted">{% trans "No pending verifications." %}</p>
   {% endif %}
 
-  <h2 class="h5 mt-4 mb-3">Recent (pending / rejected)</h2>
+  <h2 class="h5 mt-4 mb-3">{% trans "Recent (pending / rejected)" %}</h2>
   <div class="table-responsive shadow-sm rounded-3 border">
     <table class="table table-hover align-middle mb-0 small">
       <thead class="table-light">
         <tr>
-          <th>User</th><th>Role</th><th>Status</th><th>Note</th>
+          <th>{% trans "User" %}</th><th>{% trans "Role" %}</th><th>{% trans "Status" %}</th><th>{% trans "Note" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -76,10 +78,9 @@
             <td class="text-muted">{{ u.profile.verification_note|default:"—" }}</td>
           </tr>
         {% empty %}
-          <tr><td colspan="4" class="text-muted">No entries.</td></tr>
+          <tr><td colspan="4" class="text-muted">{% trans "No entries." %}</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 {% endblock %}
-

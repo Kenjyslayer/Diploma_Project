@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Create request{% endblock %}
+{% block title %}{% trans "Create request" %}{% endblock %}
 
 {% block content %}
   {% if suspicious_block %}
@@ -16,20 +16,19 @@
                 </div>
               </div>
               <div class="flex-grow-1">
-                <h1 class="h4 mb-2">Suspicious request blocked</h1>
+                <h1 class="h4 mb-2">{% trans "Suspicious request blocked" %}</h1>
                 <p class="mb-2 fw-semibold">
-                  You are not available to request military things or your account gonna be restricted.
+                  {% trans "You are not available to request military things or your account gonna be restricted." %}
                 </p>
                 <p class="text-muted mb-3">
-                  Attempts in last 30 minutes: <strong>{{ attempts|default:0 }}</strong>.
-                  Attempts left before temporary restriction: <strong>{{ attempts_left|default:0 }}</strong>.
+                  {% blocktrans with attempts=attempts|default:0 left=attempts_left|default:0 %}Attempts in last 30 minutes: <strong>{{ attempts }}</strong>. Attempts left before temporary restriction: <strong>{{ left }}</strong>.{% endblocktrans %}
                 </p>
                 <div class="d-flex flex-wrap gap-2">
-                  <a class="btn btn-primary" href="{% url 'profile' %}">Go to Profile</a>
-                  <a class="btn btn-outline-secondary" href="{% url 'create_request' %}">Back to form</a>
+                  <a class="btn btn-primary" href="{% url 'profile' %}">{% trans "Go to Profile" %}</a>
+                  <a class="btn btn-outline-secondary" href="{% url 'create_request' %}">{% trans "Back to form" %}</a>
                 </div>
                 <p class="text-muted small mt-3 mb-0">
-                  If you believe this is a mistake, rephrase and remove any military terms/calibers.
+                  {% trans "If you believe this is a mistake, rephrase and remove any military terms/calibers." %}
                 </p>
               </div>
             </div>
@@ -40,10 +39,10 @@
   {% endif %}
 
   <div class="page-hero p-4 p-md-5 mb-4">
-    <p class="text-uppercase small text-muted mb-1 fw-semibold">New demand</p>
-    <h1 class="h3 mb-2">Create a request</h1>
+    <p class="text-uppercase small text-muted mb-1 fw-semibold">{% trans "New demand" %}</p>
+    <h1 class="h3 mb-2">{% trans "Create a request" %}</h1>
     <p class="text-muted mb-0">
-      Describe what you need. Delivery drop‑off is <strong>chosen automatically</strong> from your Profile preferred post office.
+      {% trans "Describe what you need. Delivery drop-off is chosen automatically from your Profile preferred post office." %}
     </p>
   </div>
 
@@ -55,7 +54,7 @@
       {% endif %}
       {% if form.errors %}
         <div class="alert alert-danger">
-          <div class="fw-semibold mb-1">Please fix the errors below</div>
+          <div class="fw-semibold mb-1">{% trans "Please fix the errors below" %}</div>
           <div class="small">
             {% for field in form %}
               {% for err in field.errors %}
@@ -70,39 +69,39 @@
       {% endif %}
 
       <div class="alert alert-light border">
-        <div class="fw-semibold mb-1">Delivery will be sent to</div>
+        <div class="fw-semibold mb-1">{% trans "Delivery will be sent to" %}</div>
         <div class="text-muted small">
           {% if user.profile.preferred_dropoff_point %}{{ user.profile.preferred_dropoff_point }}{% else %}—{% endif %}
         </div>
-        <div class="text-muted small mt-1">You can change it anytime in <a href="{% url 'profile' %}">Profile</a>.</div>
+        <div class="text-muted small mt-1">{% trans "You can change it anytime in" %} <a href="{% url 'profile' %}">{% trans "Profile" %}</a>.</div>
       </div>
 
       <div class="row g-4">
         <div class="col-md-8">
-          <label class="form-label fw-semibold">Title</label>
+          <label class="form-label fw-semibold">{% trans "Title" %}</label>
           {{ form.title }}
           {% if form.title.errors %}<div class="text-danger small mt-1">{{ form.title.errors }}</div>{% endif %}
         </div>
         <div class="col-md-4">
-          <label class="form-label fw-semibold">Total quantity</label>
+          <label class="form-label fw-semibold">{% trans "Total quantity" %}</label>
           {{ form.total_quantity }}
           {% if form.total_quantity.errors %}<div class="text-danger small mt-1">{{ form.total_quantity.errors }}</div>{% endif %}
         </div>
         <div class="col-12">
-          <label class="form-label fw-semibold">Description</label>
+          <label class="form-label fw-semibold">{% trans "Description" %}</label>
           {{ form.description }}
           {% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Category</label>
+          <label class="form-label fw-semibold">{% trans "Category" %}</label>
           {{ form.category }}
           {% if form.category.errors %}<div class="text-danger small mt-1">{{ form.category.errors }}</div>{% endif %}
         </div>
       </div>
 
       <div class="d-flex justify-content-between align-items-center mt-4 pt-2 border-top">
-        <a href="{% url 'request_list' %}" class="btn btn-outline-secondary">Cancel</a>
-        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check2-circle me-1"></i>Publish request</button>
+        <a href="{% url 'request_list' %}" class="btn btn-outline-secondary">{% trans "Cancel" %}</a>
+        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check2-circle me-1"></i>{% trans "Publish request" %}</button>
       </div>
     </div>
   </form>

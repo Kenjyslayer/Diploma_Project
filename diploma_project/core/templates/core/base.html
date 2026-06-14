@@ -108,7 +108,14 @@
           </li>
           {% if user.is_authenticated %}
             <li class="nav-item me-lg-2">
-              <a class="nav-link" href="{% url 'profile' %}"><i class="bi bi-person-circle me-1"></i>{{ user.username }}</a>
+              <a class="nav-link d-flex align-items-center gap-2" href="{% url 'profile' %}">
+                {% if user.profile and user.profile.profile_photo %}
+                  <img src="{% url 'profile_photo_file' user.id %}" alt="" class="rounded-circle border" width="28" height="28" style="object-fit:cover;">
+                {% else %}
+                  <i class="bi bi-person-circle"></i>
+                {% endif %}
+                <span>{{ user.username }}</span>
+              </a>
             </li>
             <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">{% trans "Logout" %}</a></li>
           {% else %}

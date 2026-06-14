@@ -1,35 +1,36 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
-{% block title %}My offers{% endblock %}
+{% block title %}{% trans "My offers" %}{% endblock %}
 
 {% block content %}
   <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
     <div>
-      <h2 class="mb-1">My offers</h2>
-      <p class="text-muted small mb-0">Your contribution proposals and send windows.</p>
+      <h2 class="mb-1">{% trans "My offers" %}</h2>
+      <p class="text-muted small mb-0">{% trans "Your contribution proposals and send windows." %}</p>
     </div>
-    <a class="btn btn-outline-secondary" href="{% url 'request_list' %}">Browse requests</a>
+    <a class="btn btn-outline-secondary" href="{% url 'request_list' %}">{% trans "Browse requests" %}</a>
   </div>
 
   <form method="get" class="card border-0 shadow-sm mb-3">
     <div class="card-body p-3">
       <div class="row g-2 align-items-end">
         <div class="col-md-5">
-          <label class="form-label small fw-semibold">Status</label>
+          <label class="form-label small fw-semibold">{% trans "Status" %}</label>
           <select class="form-select" name="status">
-            <option value="" {% if not status %}selected{% endif %}>All</option>
-            <option value="proposed" {% if status == "proposed" %}selected{% endif %}>Awaiting owner</option>
-            <option value="revision_requested" {% if status == "revision_requested" %}selected{% endif %}>Changes requested</option>
-            <option value="pending" {% if status == "pending" %}selected{% endif %}>Accepted — send window</option>
-            <option value="withdrawn" {% if status == "withdrawn" %}selected{% endif %}>Withdrawn</option>
-            <option value="declined" {% if status == "declined" %}selected{% endif %}>Declined</option>
-            <option value="verified" {% if status == "verified" %}selected{% endif %}>Verified</option>
-            <option value="expired" {% if status == "expired" %}selected{% endif %}>Expired</option>
+            <option value="" {% if not status %}selected{% endif %}>{% trans "All" %}</option>
+            <option value="proposed" {% if status == "proposed" %}selected{% endif %}>{% trans "Awaiting owner" %}</option>
+            <option value="revision_requested" {% if status == "revision_requested" %}selected{% endif %}>{% trans "Changes requested" %}</option>
+            <option value="pending" {% if status == "pending" %}selected{% endif %}>{% trans "Accepted — send window" %}</option>
+            <option value="withdrawn" {% if status == "withdrawn" %}selected{% endif %}>{% trans "Withdrawn" %}</option>
+            <option value="declined" {% if status == "declined" %}selected{% endif %}>{% trans "Declined" %}</option>
+            <option value="verified" {% if status == "verified" %}selected{% endif %}>{% trans "Verified" %}</option>
+            <option value="expired" {% if status == "expired" %}selected{% endif %}>{% trans "Expired" %}</option>
           </select>
         </div>
         <div class="col-md-4 d-flex gap-2">
-          <button class="btn btn-outline-primary" type="submit">Apply</button>
-          <a class="btn btn-outline-secondary" href="{% url 'my_offers' %}">Reset</a>
+          <button class="btn btn-outline-primary" type="submit">{% trans "Apply" %}</button>
+          <a class="btn btn-outline-secondary" href="{% url 'my_offers' %}">{% trans "Reset" %}</a>
         </div>
       </div>
     </div>
@@ -47,35 +48,35 @@
                   <span class="badge {{ c.status_badge_class }} ms-1">{{ c.get_status_display }}</span>
                 </div>
                 <div class="text-muted small">
-                  Qty {{ c.quantity }} · created {{ c.created_at|date:"M j, Y H:i" }}
-                  {% if c.expires_at %}· send by <strong>{{ c.expires_at|date:"M j, Y H:i" }} UTC</strong>{% endif %}
-                  {% if c.status == "pending" %}· code <span class="font-monospace fw-semibold">{{ c.verification_code }}</span>{% endif %}
+                  {% trans "Qty" %} {{ c.quantity }} · {% trans "created" %} {{ c.created_at|date:"M j, Y H:i" }}
+                  {% if c.expires_at %}· {% trans "send by" %} <strong>{{ c.expires_at|date:"M j, Y H:i" }} UTC</strong>{% endif %}
+                  {% if c.status == "pending" %}· {% trans "code" %} <span class="font-monospace fw-semibold">{{ c.verification_code }}</span>{% endif %}
                 </div>
                 {% if c.owner_note and c.status == "revision_requested" %}
-                  <div class="alert alert-light border small mt-2 mb-0"><strong>Owner:</strong> {{ c.owner_note }}</div>
+                  <div class="alert alert-light border small mt-2 mb-0"><strong>{% trans "Owner:" %}</strong> {{ c.owner_note }}</div>
                 {% endif %}
                 {% if c.owner_note and c.status == "declined" %}
-                  <div class="alert alert-light border small mt-2 mb-0"><strong>Owner:</strong> {{ c.owner_note }}</div>
+                  <div class="alert alert-light border small mt-2 mb-0"><strong>{% trans "Owner:" %}</strong> {{ c.owner_note }}</div>
                 {% endif %}
               </div>
 
               <div class="d-flex gap-2 flex-wrap">
                 {% if c.chat_conversation %}
-                  <a class="btn btn-sm btn-outline-secondary" href="{% url 'conversation_detail' c.chat_conversation.id %}">Chat</a>
+                  <a class="btn btn-sm btn-outline-secondary" href="{% url 'conversation_detail' c.chat_conversation.id %}">{% trans "Chat" %}</a>
                 {% endif %}
                 {% if c.status == 'revision_requested' %}
-                  <a class="btn btn-sm btn-outline-primary" href="{% url 'revise_contribution' c.id %}">Update proposal</a>
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'revise_contribution' c.id %}">{% trans "Update proposal" %}</a>
                 {% endif %}
                 {% if c.status == 'proposed' or c.status == 'revision_requested' %}
                   <form method="post" action="{% url 'withdraw_contribution' c.id %}">
                     {% csrf_token %}
-                    <button class="btn btn-sm btn-outline-danger" type="submit">Withdraw</button>
+                    <button class="btn btn-sm btn-outline-danger" type="submit">{% trans "Withdraw" %}</button>
                   </form>
                 {% endif %}
                 {% if c.status == 'pending' %}
-                  <a class="btn btn-sm btn-outline-dark" href="{% url 'shipping_handoff_slip' c.id %}">Shipping slip + QR</a>
-                  <a class="btn btn-sm btn-outline-primary" href="{% url 'upload_proof' c.id %}">Upload proof</a>
-                  <a class="btn btn-sm btn-outline-danger" href="{% url 'open_dispute' c.id %}">Dispute</a>
+                  <a class="btn btn-sm btn-outline-dark" href="{% url 'shipping_handoff_slip' c.id %}">{% trans "Shipping slip + QR" %}</a>
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'upload_proof' c.id %}">{% trans "Upload proof" %}</a>
+                  <a class="btn btn-sm btn-outline-danger" href="{% url 'open_dispute' c.id %}">{% trans "Dispute" %}</a>
                 {% endif %}
               </div>
             </div>
@@ -85,8 +86,7 @@
     </div>
   {% else %}
     <div class="alert alert-info border-0 shadow-sm">
-      No offers yet. Open a request and click “Contribute” to send your first proposal.
+      {% trans "No offers yet. Open a request and click “Contribute” to send your first proposal." %}
     </div>
   {% endif %}
 {% endblock %}
-

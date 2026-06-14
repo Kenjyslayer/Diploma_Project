@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
-{% block title %}Shipping handoff · {{ contribution.request.title }}{% endblock %}
+{% block title %}{% trans "Shipping slip" %} · {{ contribution.request.title }}{% endblock %}
 
 {% block extra_head %}
   <style media="print">
@@ -13,58 +14,57 @@
 
 {% block content %}
   <div class="no-print d-flex flex-wrap gap-2 align-items-center mb-3">
-    <a class="btn btn-outline-secondary btn-sm" href="{% url 'dashboard' %}">← Dashboard</a>
-    <a class="btn btn-outline-secondary btn-sm" href="{% url 'request_detail' req.id %}">Request</a>
-    <button type="button" class="btn btn-primary btn-sm" onclick="window.print()"><i class="bi bi-printer me-1"></i>Print</button>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'dashboard' %}">← {% trans "Dashboard" %}</a>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'request_detail' req.id %}">{% trans "Request" %}</a>
+    <button type="button" class="btn btn-primary btn-sm" onclick="window.print()"><i class="bi bi-printer me-1"></i>{% trans "Print" %}</button>
   </div>
 
   <div class="card border-0 shadow-sm slip-sheet">
     <div class="card-body p-4 p-md-5">
-      <p class="text-uppercase small text-muted mb-1 fw-semibold">Fulfillment MVP — handoff slip</p>
-      <h1 class="h4 mb-4">Ship parcel · {{ req.title }}</h1>
+      <p class="text-uppercase small text-muted mb-1 fw-semibold">{% trans "Fulfillment MVP — handoff slip" %}</p>
+      <h1 class="h4 mb-4">{% blocktrans with title=req.title %}Ship parcel · {{ title }}{% endblocktrans %}</h1>
 
       <div class="alert alert-warning border-0 small no-print" role="alert">
-        <strong>Not an official carrier label.</strong> Nova Poshta, Hermes, DHL, etc. issue real waybills in their own apps or via business API.
-        This page is a <strong>reference slip</strong> with your verification code and addresses so staff (or you) can identify the shipment. Create the actual shipment in the carrier’s system as usual.
+        {% trans "Not an official carrier label. Nova Poshta, Hermes, DHL, etc. issue real waybills in their own apps or via business API. This page is a reference slip with your verification code and addresses so staff (or you) can identify the shipment. Create the actual shipment in the carrier’s system as usual." %}
       </div>
 
       <div class="row g-4 align-items-start">
         <div class="col-md-5 text-center">
           <div class="border rounded-3 p-3 bg-light d-inline-block">
-            <img src="{{ qr_data_uri }}" alt="QR code" width="220" height="220" class="img-fluid">
+            <img src="{{ qr_data_uri }}" alt="{% trans 'QR code' %}" width="220" height="220" class="img-fluid">
           </div>
-          <p class="small text-muted mt-2 mb-0">Scan encodes JSON (ID, verification, ship-from / deliver hints).</p>
+          <p class="small text-muted mt-2 mb-0">{% trans "Scan encodes JSON (ID, verification, ship-from / deliver hints)." %}</p>
         </div>
         <div class="col-md-7">
           <dl class="row small mb-0">
-            <dt class="col-sm-4 text-muted">Verification</dt>
+            <dt class="col-sm-4 text-muted">{% trans "Verification" %}</dt>
             <dd class="col-sm-8 fw-semibold font-monospace">
               <span id="ship-verification-code">{{ contribution.verification_code }}</span>
-              <button type="button" class="btn btn-sm btn-outline-secondary ms-2 no-print" id="btn-copy-code">Copy</button>
-              <span class="small text-muted ms-2 no-print" id="copy-status" style="display:none;">Copied.</span>
+              <button type="button" class="btn btn-sm btn-outline-secondary ms-2 no-print" id="btn-copy-code">{% trans "Copy" %}</button>
+              <span class="small text-muted ms-2 no-print" id="copy-status" style="display:none;">{% trans "Copied." %}</span>
             </dd>
-            <dt class="col-sm-4 text-muted">Contribution</dt>
-            <dd class="col-sm-8">#{{ contribution.id }} · qty {{ contribution.quantity }}</dd>
-            <dt class="col-sm-4 text-muted">Send by (UTC)</dt>
+            <dt class="col-sm-4 text-muted">{% trans "Contribution" %}</dt>
+            <dd class="col-sm-8">#{{ contribution.id }} · {% trans "qty" %} {{ contribution.quantity }}</dd>
+            <dt class="col-sm-4 text-muted">{% trans "Send by (UTC)" %}</dt>
             <dd class="col-sm-8">{% if contribution.expires_at %}{{ contribution.expires_at|date:"Y-m-d H:i" }}{% else %}—{% endif %}</dd>
-            <dt class="col-sm-4 text-muted">Your ship-from</dt>
+            <dt class="col-sm-4 text-muted">{% trans "Your ship-from" %}</dt>
             <dd class="col-sm-8" style="white-space: pre-wrap;">{% if req.delivery_country == 'UA' and contribution.contrib_delivery_kind == 'nova_poshta' %}{{ contribution.contrib_np_label|default:"—" }}{% elif req.delivery_country == 'UA' and contribution.contrib_delivery_kind == 'ukrposhta' %}{{ contribution.contrib_up_label|default:"—" }}{% else %}{{ contribution.contrib_dropoff_note|default:"—" }}{% endif %}</dd>
-            <dt class="col-sm-4 text-muted">Deliver to (request)</dt>
+            <dt class="col-sm-4 text-muted">{% trans "Deliver to (request)" %}</dt>
             <dd class="col-sm-8" style="white-space: pre-wrap;">{% if req.delivery_country == 'UA' and req.delivery_kind == 'nova_poshta' %}{% if req.np_label %}{{ req.np_label }}{% else %}{{ req.delivery_location|default:"—" }}{% endif %}{% elif req.delivery_country == 'UA' and req.delivery_kind == 'ukrposhta' %}{% if req.up_label %}{{ req.up_label }}{% else %}{{ req.delivery_location|default:"—" }}{% endif %}{% else %}{{ req.delivery_location|default:"—" }}{% endif %}</dd>
           </dl>
           <div class="mt-3 small">
-            <div class="fw-semibold mb-1">What to tell the clerk</div>
+            <div class="fw-semibold mb-1">{% trans "What to tell the clerk" %}</div>
             <ul class="text-muted mb-0">
-              <li>“Please create a standard shipment to the recipient drop-off point (shown above).”</li>
-              <li>“Add this reference/verification code to the shipment note: <span class="font-monospace">{{ contribution.verification_code }}</span>.”</li>
-              <li>If asked, show this slip/QR so the code and addresses can be copied without typos.</li>
+              <li>{% trans "“Please create a standard shipment to the recipient drop-off point (shown above).”" %}</li>
+              <li>{% blocktrans with code=contribution.verification_code %}“Add this reference/verification code to the shipment note: {{ code }}.”{% endblocktrans %}</li>
+              <li>{% trans "If asked, show this slip/QR so the code and addresses can be copied without typos." %}</li>
             </ul>
           </div>
         </div>
       </div>
 
       <details class="mt-4 small text-muted no-print">
-        <summary class="cursor-pointer">Raw QR payload (JSON)</summary>
+        <summary class="cursor-pointer">{% trans "Raw QR payload (JSON)" %}</summary>
         <pre class="mt-2 p-2 bg-light rounded small mb-0" style="white-space: pre-wrap; word-break: break-all;">{{ qr_payload_json }}</pre>
       </details>
     </div>
@@ -85,7 +85,7 @@
             setTimeout(() => (statusEl.style.display = 'none'), 1200);
           }
         } catch (e) {
-          window.prompt('Copy code:', text);
+          window.prompt('{% trans "Copy code:" %}', text);
         }
       });
     })();

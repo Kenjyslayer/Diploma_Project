@@ -22,6 +22,7 @@ from .forms import (
     VerificationUploadForm,
     RequestCloseForm,
     ProfileSettingsForm,
+    ProfileAvatarForm,
 )
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -245,6 +246,10 @@ def profile(request):
     action = request.POST.get('action') if request.method == 'POST' else None
 
     verify_form = VerificationUploadForm()
+    avatar_initial = {
+        "profile_photo_public": profile.profile_photo_public,
+    }
+    avatar_form = ProfileAvatarForm(initial=avatar_initial)
     settings_initial = {
         'first_name': request.user.first_name,
         'last_name': request.user.last_name,
@@ -259,9 +264,15 @@ def profile(request):
         'preferred_up_postcode': profile.preferred_up_postcode,
         'preferred_up_office_id': profile.preferred_up_office_id,
         'preferred_up_label': profile.preferred_up_label,
-        'profile_photo_public': profile.profile_photo_public,
     }
     settings_form = ProfileSettingsForm(initial=settings_initial, user=request.user)
+
+    if request.method == 'POST' and action == 'avatar':
+        avatar_form = ProfileAvatarForm(request.POST, request.FILES)
+        if avatar_form.is_valid():
+            avatar_form.apply_to_profile(profile)
+            messages.success(request, _("Avatar updated."))
+            return redirect('profile')
 
     if request.method == 'POST' and action == 'settings':
         settings_form = ProfileSettingsForm(request.POST, request.FILES, user=request.user)
@@ -323,17 +334,22 @@ def profile(request):
         'profile': profile,
         'needs_submission': _needs_verification_submission(request.user),
         'verify_form': verify_form,
+        'avatar_form': avatar_form,
         'settings_form': settings_form,
     }
     ctx["now"] = timezone.now()
     # Profile completeness/progress (lightweight UX, not a strict gate).
     steps = []
-    steps.append(("Name", bool((request.user.first_name or "").strip()) and bool((request.user.last_name or "").strip())))
-    steps.append(("Phone", bool((profile.phone_number or "").strip())))
-    steps.append(("Preferred drop-off", bool((profile.preferred_dropoff_point or "").strip())))
-    steps.append(("Documents uploaded", bool(profile.passport_scan) and (profile.role != "military" or bool(profile.reserve_plus_pdf)))
+    steps.append((_('Name'), bool((request.user.first_name or "").strip()) and bool((request.user.last_name or "").strip())))
+    steps.append((_('Phone'), bool((profile.phone_number or "").strip())))
+    steps.append((_('Preferred drop-off'), bool((profile.preferred_dropoff_point or "").strip())))
+    steps.append(
+        (
+            _('Documents uploaded'),
+            bool(profile.passport_scan) and (profile.role != "military" or bool(profile.reserve_plus_pdf)),
+        )
     )
-    steps.append(("Verified", profile.verification_status == profile.VERIFICATION_VERIFIED))
+    steps.append((_('Verified'), profile.verification_status == profile.VERIFICATION_VERIFIED))
     done = sum(1 for _, ok in steps if ok)
     total = len(steps) if steps else 1
     ctx["profile_steps"] = steps
